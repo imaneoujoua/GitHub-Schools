@@ -1,7 +1,9 @@
 export const appConfig = {
   appName: 'GitHub-Schools',
-  version: '1.0.0',
-  description: 'Plateforme de gestion de projets GitHub pour les étudiants et équipes académiques.',
+  version: '2.0.0',
+  description: 'Plateforme de gestion de projets GitHub pour les étudiants, enseignants et équipes académiques.',
+  projectType: 'PFE / projet d’entreprise',
+  siteUrl: 'https://github.com/imaneoujoua/GitHub-Schools',
   theme: {
     accent: '#4f46e5',
     accentSoft: '#eef2ff',
@@ -9,5 +11,10 @@ export const appConfig = {
     warning: '#f59e0b',
     danger: '#ef4444',
     neutral: '#0f172a',
+  },
+  metadata: {
+    owner: 'Imane Oujoua',
+    status: 'Production-ready demo',
+    target: 'Soutenance PFE',
   },
 };
