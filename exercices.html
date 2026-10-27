@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Espace Exercices & Lab - GitHub Schools</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            background-color: #0f172a; /* Thème sombre "Terminal" */
+            color: #e2e8f0;
+            padding-bottom: 60px;
+        }
+
+        /* Barre de navigation */
+        nav {
+            background: #1e293b;
+            border-bottom: 1px solid #334155;
+            padding: 15px 0;
+            margin-bottom: 30px;
+        }
+
+        .nav-container {
+            width: 85%;
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .back-btn {
+            color: #cbd5e1;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+
+        .back-btn:hover {
+            color: #38bdf8;
+        }
+
+        .container {
+            width: 85%;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: #f1f5f9;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .description {
+            color: #94a3b8;
+            margin-bottom: 35px;
+            font-size: 16px;
+        }
+
+        /* Cartes de Lab */
+        .lab-card {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+        }
+
+        .lab-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #334155;
+            padding-bottom: 10px;
+        }
+
+        .lab-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #38bdf8;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .lab-difficulty {
+            font-size: 11px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .diff-debutant { background: #065f46; color: #a7f3d0; }
+        .diff-moyen { background: #9a3412; color: #ffedd5; }
+        .diff-avance { background: #991b1b; color: #fee2e2; }
+
+        .lab-context {
+            font-size: 15px;
+            line-height: 1.6;
+            color: #cbd5e1;
+            margin-bottom: 20px;
+            background: #0f172a;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #64748b;
+        }
+
+        /* Terminal Virtuel */
+        .terminal-box {
+            background: #050b14;
+            border: 1px solid #475569;
+            border-radius: 6px;
+            padding: 15px;
+            font-family: 'Courier New', Courier, monospace;
+            margin-bottom: 15px;
+        }
+
+        .terminal-header {
+            color: #64748b;
+            font-size: 13px;
+            margin-bottom: 10px;
+            display: flex;
+            gap: 5px;
+        }
+
+        .terminal-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .terminal-row {
+            display: flex;
+            align-items: center;
+            color: #4ade80;
+            font-size: 15px;
+        }
+
+        .terminal-prefix {
+            margin-right: 10px;
+            user-select: none;
+            color: #38bdf8;
+        }
+
+        .terminal-input {
+            background: transparent;
+            border: none;
+            color: #4ade80;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 15px;
+            width: 100%;
+            outline: none;
+        }
+
+        /* Boutons d'actions */
+        .action-zone {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: background 0.2s;
+        }
+
+        .btn-submit { background: #10b981; color: white; }
+        .btn-submit:hover { background: #059669; }
+
+        .btn-hint { background: #475569; color: #cbd5e1; }
+        .btn-hint:hover { background: #334155; }
+
+        /* Correction */
+        .feedback-box {
+            padding: 15px;
+            border-radius: 6px;
+            font-size: 14px;
+            line-height: 1.5;
+            display: none;
+        }
+
+        .feedback-success {
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid #10b981;
+            color: #34d399;
+            display: block;
+        }
+
+        .feedback-error {
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid #ef4444;
+            color: #f87171;
+            display: block;
+        }
+
+        .hint-text {
+            background: rgba(234, 179, 8, 0.1);
+            border: 1px solid #eab308;
+            color: #facc15;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            margin-bottom: 15px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="nav-container">
+            <a href="index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Retour au tableau de bord</a>
+            <div><strong>Atelier Pratique & Labs de Code (7 Missions)</strong></div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1><i class="fa-solid fa-flask-vial" style="color: #38bdf8;"></i> Espace Exercices & Code Labs</h1>
+        <p class="description">Pas de QCM ici ! Tapez la commande Git exacte demandée pour résoudre chaque scénario technique réel.</p>
+
+        <div class="lab-card" id="lab1">
+            <div class="lab-header">
+                <div class="lab-title"><i class="fa-solid fa-code-merge"></i> Mission 1 : Résolution de Conflit Urgent</div>
+                <span class="lab-difficulty diff-moyen">Intermédiaire</span>
+            </div>
+            <div class="lab-context">
+                <strong>Scénario :</strong> Après un <code>git pull</code>, Git signale un conflit de fusion dans le fichier <code>app.js</code>. Vous ouvrez le fichier, vous nettoyez les lignes et résolvez le problème à la main. <br>
+                Quelle commande tapez-vous immédiatement pour <strong>marquer le fichier résolu et le préparer pour le commit de fusion</strong> ?
+            </div>
+            <div class="hint-text" id="hint1">💡 <strong>Indice :</strong> C'est la commande de base pour ajouter un élément modifié à la Zone de Staging.</div>
+            <div class="terminal-box">
+                <div class="terminal-row"><span class="terminal-prefix">$</span><input type="text" class="terminal-input" id="input1" placeholder="git..." autocomplete="off"></div>
+            </div>
+            <div class="action-zone">
+                <button class="btn btn-submit" onclick="validerLab(1, 'git add app.js', 'Fichier indexé avec succès ! Tu peux maintenant valider la fusion.')"><i class="fa-solid fa-terminal"></i> Exécuter</button>
+                <button class="btn btn-hint" onclick="afficherIndice(1)"><i class="fa-regular fa-lightbulb"></i> Indice</button>
+            </div>
+            <div class="feedback-box" id="feedback1"></div>
+        </div>
+
+        <div class="lab-card" id="lab2">
+            <div class="lab-header">
+                <div class="lab-title"><i class="fa-solid fa-boxes-stacked"></i> Mission 2 : Changement de branche (Remisage)</div>
+                <span class="lab-difficulty diff-moyen">Intermédiaire</span>
+            </div>
+            <div class="lab-context">
+                <strong>Scénario :</strong> Vous travaillez sur un nouveau design pas encore stable. Votre enseignant vous demande de changer immédiatement de branche. Vous ne voulez pas faire de commit brouillon.<br>
+                Quelle commande vous permet de <strong>mettre de côté vos modifications non validées</strong> dans une cache temporaire ?
+            </div>
+            <div class="hint-text" id="hint2">💡 <strong>Indice :</strong> En anglais, ce terme signifie masquer ou mettre de côté dans une boîte.</div>
+            <div class="terminal-box">
+                <div class="terminal-row"><span class="terminal-prefix">$</span><input type="text" class="terminal-input" id="input2" placeholder="git..." autocomplete="off"></div>
+            </div>
+            <div class="action-zone">
+                <button class="btn btn-submit" onclick="validerLab(2, 'git stash', 'Modifications remisées ! Ton répertoire est propre pour changer de branche.')"><i class="fa-solid fa-terminal"></i> Exécuter</button>
+                <button class="btn btn-hint" onclick="afficherIndice(2)"><i class="fa-regular fa-lightbulb"></i> Indice</button>
+            </div>
+            <div class="feedback-box" id="feedback2"></div>
+        </div>
+
+        <div class="lab-card" id="lab3">
+            <div class="lab-header">
+                <div class="lab-title"><i class="fa-solid fa-triangle-exclamation"></i> Mission 3 : Annulation Critique Radicale</div>
+                <span class="lab-difficulty diff-avance">Avancé</span>
+            </div>
+            <div class="lab-context">
+                <strong>Scénario :</strong> Votre dernier commit contient un bug majeur destructeur et des mots de passe. Vous décidez de l'effacer totalement.<br>
+                Quelle commande permet de <strong>reculer d'un commit en effaçant définitivement toutes vos modifications locales</strong> ?
+            </div>
+            <div class="hint-text" id="hint3">💡 <strong>Indice :</strong> Utilisez un reset avec l'option la plus stricte (flag) et ciblez le commit précédent (HEAD~1).</div>
+            <div class="terminal-box">
+                <div class="terminal-row"><span class="terminal-prefix">$</span><input type="text" class="terminal-input" id="input3" placeholder="git..." autocomplete="off"></div>
+            </div>
+            <div class="action-zone">
+                <button class="btn btn-submit" onclick="validerLab(3, 'git reset --hard HEAD~1', 'Historique nettoyé de force ! Attention, les données effacées le sont définitivement.')"><i class="fa-solid fa-terminal"></i> Exécuter</button>
+                <button class="btn btn-hint" onclick="afficherIndice(3)"><i class="fa-regular fa-lightbulb"></i> Indice</button>
+            </div>
+            <div class="feedback-box" id="feedback3"></div>
+        </div>
+
+        <div class="lab-card" id="lab4">
+            <div class="lab-header">
+                <div class="lab-title"><i class="fa-solid fa-pen-to-square"></i> Mission 4 : Correction d'un Message de Commit</div>
+                <span class="lab-difficulty diff-debutant">Débutant</span>
+            </div>
+            <div class="lab-context">
+                <strong>Scénario :</strong> Vous venez de valider un commit local avec le message <code>"Ajou de la page"</code>. Vous constatez une faute de frappe honteuse. <br>
+                Quelle commande vous permet de <strong>modifier directement le message textuel de ce tout dernier commit</strong> sans en créer un nouveau ?
+            </div>
+            <div class="hint-text" id="hint4">💡 <strong>Indice :</strong> On utilise une option spéciale appelée "amendement".</div>
+            <div class="terminal-box">
+                <div class="terminal-row"><span class="terminal-prefix">$</span><input type="text" class="terminal-input" id="input4" placeholder="git..." autocomplete="off"></div>
+            </div>
+            <div class="action-zone">
+                <button class="btn btn-submit" onclick="validerLab(4, 'git commit --amend', 'Excellent ! Votre éditeur s\'ouvre ou le commit est modifié à la volée.')"><i class="fa-solid fa-terminal"></i> Exécuter</button>
+                <button class="btn btn-hint" onclick="afficherIndice(4)"><i class="fa-regular fa-lightbulb"></i> Indice</button>
+            </div>
+            <div class="feedback-box" id="feedback4"></div>
+        </div>
+
+        <div class="lab-card" id="lab5">
+            <div class="lab-header">
+                <div class="lab-title"><i class="fa-solid fa-code-branch"></i> Mission 5 : Raccourci de Branchement</div>
+                <span class="lab-difficulty diff-debutant">Débutant</span>
+            </div>
+            <div class="lab-context">
+                <strong>Scénario :</strong> Vous devez développer un système de paiement. Vous voulez aller vite.<br>
+                Quelle commande unique permet de <strong>créer la branche nommée <code>feature-payment</code> ET de basculer dessus immédiatement</strong> ?
+            </div>
+            <div class="hint-text" id="hint5">💡 <strong>Indice :</strong> Utilisez la commande habituelle de déplacement complétée par l'option <code>-b</code>.</div>
+            <div class="terminal-box">
+                <div class="terminal-row"><span class="terminal-prefix">$</span><input type="text" class="terminal-input" id="input5" placeholder="git..." autocomplete="off"></div>
+            </div>
+            <div class="action-zone">
+                <button class="btn btn-submit" onclick="validerLab(5, 'git checkout -b feature-payment', 'Parfait ! Tu as créé la branche et tu es déjà positionné dessus.')"><i class="fa-solid fa-terminal"></i> Exécuter</button>
+                <button class="btn btn-hint" onclick="afficherIndice(5)"><i class="fa-regular fa-lightbulb"></i> Indice</button>
+            </div>
+            <div class="feedback-box" id="feedback5"></div>
+        </div>
+
+        <div class="lab-card" id="lab6">
+            <div class="lab-header">
+                <div class="lab-title"><i class="fa-solid fa-link"></i> Mission 6 : Inspection des Serveurs Distants</div>
+                <span class="lab-difficulty diff-moyen">Intermédiaire</span>
+            </div>
+            <div class="lab-context">
+                <strong>Scénario :</strong> Vous reprenez un projet étudiant sur votre PC mais vous ne savez plus si ce dossier local est correctement lié à votre compte GitHub ou à celui de votre binôme.<br>
+                Quelle commande vous permet de <strong>lister et vérifier de manière détaillée les URL de dépôts distants</strong> configurées ?
+            </div>
+            <div class="hint-text" id="hint6">💡 <strong>Indice :</strong> C'est une déclinaison de la commande <code>git remote</code> complétée par l'option de verbosité (<code>-v</code>).</div>
+            <div class="terminal-box">
+                <div class="terminal-row"><span class="terminal-prefix">$</span><input type="text" class="terminal-input" id="input6" placeholder="git..." autocomplete="off"></div>
+            </div>
+            <div class="action-zone">
+                <button class="btn btn-submit" onclick="validerLab(6, 'git remote -v', 'Bien joué ! Les adresses de Fetch et Push apparaissent à l\'écran.')"><i class="fa-solid fa-terminal"></i> Exécuter</button>
+                <button class="btn btn-hint" onclick="afficherIndice(6)"><i class="fa-regular fa-lightbulb"></i> Indice</button>
+            </div>
+            <div class="feedback-box" id="feedback6"></div>
+        </div>
+
+        <div class="lab-card" id="lab7">
+            <div class="lab-header">
+                <div class="lab-title"><i class="fa-solid fa-tag"></i> Mission 7 : Livraison Finale (Tagging)</div>
+                <span class="lab-difficulty diff-avance">Avancé</span>
+            </div>
+            <div class="lab-context">
+                <strong>Scénario :</strong> Votre application web est terminée, testée et parfaitement stable. Votre enseignant demande de figer le code actuel pour marquer l'examen.<br>
+                Quelle commande vous permet de <strong>poser un tag annoté nommé <code>v1.0</code></strong> avec le message explicatif <code>"Version Finale"</code> ?
+            </div>
+            <div class="hint-text" id="hint7">💡 <strong>Indice :</strong> La structure requise est : <code>git tag -a [nom] -m "[message]"</code>. Respecte bien les espaces.</div>
+            <div class="terminal-box">
+                <div class="terminal-row"><span class="terminal-prefix">$</span><input type="text" class="terminal-input" id="input7" placeholder="git..." autocomplete="off"></div>
+            </div>
+            <div class="action-zone">
+                <button class="btn btn-submit" onclick="validerLab(7, 'git tag -a v1.0 -m &quot;Version Finale&quot;', 'Félicitations ! Votre jalon de version stable est gravé dans l\'historique.')"><i class="fa-solid fa-terminal"></i> Exécuter</button>
+                <button class="btn btn-hint" onclick="afficherIndice(7)"><i class="fa-regular fa-lightbulb"></i> Indice</button>
+            </div>
+            <div class="feedback-box" id="feedback7"></div>
+        </div>
+
+    </div>
+
+    <script>
+        function afficherIndice(num) {
+            document.getElementById('hint' + num).style.display = 'block';
+        }
+
+        function validerLab(num, cmdCorrecte, msgSucces) {
+            const saisie = document.getElementById('input' + num).value.trim();
+            const feedback = document.getElementById('feedback' + num);
+
+            // Nettoie les doubles espaces éventuels faits par l'utilisateur
+            const saisiePropre = saisie.replace(/\s+/g, ' ');
+
+            // Pour la mission 7 (gestion des guillemets simples ou doubles)
+            let matches = false;
+            if (num === 7) {
+                // Permet de tolérer à la fois les guillemets droits simples ou doubles
+                if (saisiePropre === 'git tag -a v1.0 -m "Version Finale"' || saisiePropre === "git tag -a v1.0 -m 'Version Finale'") {
+                    matches = true;
+                }
+            } else {
+                matches = (saisiePropre.toLowerCase() === cmdCorrecte.toLowerCase());
+            }
+
+            if (matches) {
+                feedback.className = "feedback-box feedback-success";
+                feedback.innerHTML = `<i class="fa-solid fa-square-check"></i> <strong>Exécution réussie !</strong><br>${msgSucces}`;
+            
+                // --- CODE DYNAMIQUE RAJOUTÉ ---
+            // Sauvegarder la réussite de cette mission dans le localStorage
+            let reussites = JSON.parse(localStorage.getItem('git_labs_completed')) || [];
+            if (!reussites.includes(num)) {
+                reussites.push(num);
+                localStorage.setItem('git_labs_completed', JSON.stringify(reussites));
+            }
+            // ------------------------------
+            } else {
+                 feedback.className = "feedback-box feedback-error";
+                 feedback.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> <strong>Erreur de syntaxe Bash :</strong> La commande n'est pas reconnue.`;
+             }
+        }   
+    </script>
+</body>
+</html>

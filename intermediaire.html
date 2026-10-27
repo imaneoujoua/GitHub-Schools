@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Commandes Intermédiaires - GitHub Schools</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            background-color: #f4f7f6;
+            color: #333;
+            padding-bottom: 60px;
+        }
+
+        /* Barre de navigation supérieure */
+        nav {
+            background: #24292e;
+            color: white;
+            padding: 15px 0;
+            margin-bottom: 30px;
+        }
+
+        .nav-container {
+            width: 85%;
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .back-btn {
+            color: #cbd5e1;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+
+        .back-btn:hover {
+            color: white;
+        }
+
+        .container {
+            width: 85%;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: #24292e;
+            margin-bottom: 10px;
+        }
+
+        .description {
+            color: #64748b;
+            margin-bottom: 30px;
+        }
+
+        /* Onglets d'interaction */
+        .tabs {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 10px;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            font-size: 16px;
+            font-weight: 600;
+            color: #64748b;
+            cursor: pointer;
+            padding: 8px 16px;
+            transition: all 0.2s;
+        }
+
+        .tab-btn.active {
+            color: #b06000; /* Orange Intermédiaire */
+            border-bottom: 3px solid #b06000;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Titres des sous-sections de commandes */
+        .section-title {
+            margin: 25px 0 15px 0;
+            color: #b06000;
+            font-size: 20px;
+            border-bottom: 1px solid #cbd5e1;
+            padding-bottom: 5px;
+        }
+
+        /* Styles du groupe de commandes */
+        .command-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            border-left: 5px solid #b06000;
+        }
+
+        .command-card h3 {
+            font-size: 18px;
+            margin-bottom: 8px;
+            color: #24292e;
+        }
+
+        .command-card p {
+            font-size: 14px;
+            color: #64748b;
+            margin-bottom: 12px;
+        }
+
+        .code-box {
+            background: #1e293b;
+            color: #f8fafc;
+            padding: 12px 15px;
+            border-radius: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        .copy-btn {
+            background: #334155;
+            color: #cbd5e1;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: background 0.2s;
+        }
+
+        .copy-btn:hover {
+            background: #475569;
+            color: white;
+        }
+
+        /* Styles de la zone d'Exercices */
+        .quiz-container {
+            background: white;
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        .question {
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px dashed #e2e8f0;
+        }
+
+        .question p {
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #24292e;
+        }
+
+        .options-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option-item {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .option-item:hover {
+            background: #f1f5f9;
+        }
+
+        /* Classes dynamiques pour la correction */
+        .correct {
+            background-color: #d1e7dd !important;
+            border-color: #a3cfbb !important;
+            color: #0f5132;
+            font-weight: 600;
+        }
+
+        .incorrect {
+            background-color: #f8d7da !important;
+            border-color: #f5c2c7 !important;
+            color: #842029;
+        }
+
+        .score-box {
+            margin-top: 20px;
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+            color: #24292e;
+            background: #fef7e0;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #f5c2c7;
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="nav-container">
+            <a href="index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Retour à l'accueil</a>
+            <div><strong>Niveau : Intermédiaire</strong></div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1>🌿 Branches, Gestion d'Équipe & Dépôts Distants</h1>
+        <p class="description">Guide complet pour maîtriser le travail parallèle en équipe et la synchronisation avec GitHub sans écraser le travail des autres.</p>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('lecon')"><i class="fa-solid fa-book"></i> Pense-bête (Branches & Collaboration)</button>
+            <button class="tab-btn" onclick="switchTab('pratique')"><i class="fa-solid fa-pen-clip"></i> Exercices Pratiques</button>
+        </div>
+
+        <div id="tab-lecon" class="tab-content active">
+            
+            <div class="section-title"><i class="fa-solid fa-code-branch"></i> A. Maîtrise Avancée des Branches Locales</div>
+
+            <div class="command-card">
+                <h3>1. Lister les branches locales</h3>
+                <p>Affiche toutes les branches créées sur votre machine. La branche sur laquelle vous vous trouvez est marquée par un astérisque <code>*</code>.</p>
+                <div class="code-box">
+                    <code id="cmd_branch_list">git branch</code>
+                    <button class="copy-btn" onclick="copierCode('cmd_branch_list')"><i class="fa-regular fa-copy"></i> Copier</button>
+                </div>
+            </div>
+
+            <div class="command-card">
+                <h3>2. Créer une nouvelle branche</h3>
+                <p>Crée une nouvelle ligne de développement (ex: <code>feature-login</code>) pour coder une fonctionnalité de manière isolée.</p>
+                <div class="code-box">
+                    <code id="cmd_branch_create">git branch feature-login</code>
+                    <button class="copy-btn" onclick="copierCode('cmd_branch_create')"><i class="fa-regular fa-copy"></i> Copier</button>
+                </div>
+            </div>
+
+            <div class="command-card">
+                <h3>3. Basculer sur une branche (Checkout)</h3>
+                <p>Permet de vous déplacer sur la branche sélectionnée pour y effectuer vos modifications.</p>
+                <div class="code-box">
+                    <code id="cmd_branch_checkout">git checkout feature-login</code>
+                    <button class="copy-btn" onclick="copierCode('cmd_branch_checkout')"><i class="fa-regular fa-copy"></i> Copier</button>
+                </div>
+            </div>
+
+            <div class="command-card">
+                <h3>4. Raccourci : Créer ET basculer instantanément</h3>
+                <p>Crée la branche demandée et vous déplace dessus immédiatement en une seule ligne de commande.</p>
+                <div class="code-box">
+                    <code id="cmd_branch_b">git checkout -b nouvelle-branche</code>
+                    <button class="copy-btn" onclick="copierCode('cmd_branch_b')"><i class="fa-regular fa-copy"></i> Copier</button>
+                </div>
+            </div>
+
+            <div class="command-card">
+                <h3>5. Fusionner une branche (Merge)</h3>
+                <p>Fusionne les commits de la branche spécifiée (ex: <code>feature-login</code>) dans la branche active où vous êtes positionné (généralement <code>main</code>).</p>
+                <div class="code-box">
+                    <code id="cmd_branch_merge">git merge feature-login</code>
+                    <button class="copy-btn" onclick="copierCode('cmd_branch_merge')"><i class="fa-regular fa-copy"></i> Copier</button>
+                </div>
+            </div>
+
+            <div class="command-card">
+                <h3>6. Supprimer une branche locale sécurisée</h3>
+                <p>Supprime une branche locale uniquement si elle a déjà été entièrement fusionnée avec la branche principale.</p>
+                <div class="code-box">
+                    <code id="cmd_branch_delete">git branch -d nom-de-la-branche</code>
+                    <button class="copy-btn" onclick="copierCode('cmd_branch_delete')"><i class="fa-regular fa-copy"></i> Copier</button>
+                </div>
+            </div>
+
+
+            <div class="section-title"><i class="fa-solid fa-cloud-arrow-up"></i> B. Synchronisation avec le Dépôt Distant (GitHub)</div>
+
+            <div class="command-card">
+                <h3>7. Connecter son PC à un dépôt GitHub</h3>
+                <p>Établit un lien de connexion nommé <code>origin</code> entre votre dépôt local sur PC et l'adresse URL de votre serveur GitHub.</p>
+                <div class="code-box">
+                    <code id="cmd_remote_add">git remote add origin https://github.com/utilisateur/projet.git</code>
+                    <button class="copy-btn" onclick="copierCode('cmd_remote_add')"><i class="fa-regular fa-copy"></i> Copier</button>
+                </div>
+            </div>
+
+            <div class="command-card">
+                <h3>8. Vérifier la liaison avec le serveur</h3>
+                <p>Affiche les adresses URL distantes configurées pour l'envoi (push) et la réception (fetch) de vos fichiers.</p>
+                <div class="code-box">
+                    <code id="cmd_remote_v">git remote -v</code>
+                    <button class="copy-btn" onclick="copierCode('cmd_remote_v')"><i class="fa-regular fa-copy"></i> Copier</button>
+                </div>
+            </div>
+
+            <div class="command-card">
+                <h3>9. Envoyer ses commits locaux (Push)</h3>
+                <p>Téléverse vos enregistrements locaux vers la branche principale de GitHub. Le drapeau <code>-u</code> lie les branches pour les prochains envois.</p>
+                <div class="code-box">
+                    <code id="cmd_push_u">git push -u origin main</code>
+                    <button class="copy-btn" onclick="copierCode('cmd_push_u')"><i class="fa-regular fa-copy"></i> Copier</button>
+                </div>
+            </div>
+
+            <div class="command-card">
+                <h3>10. Pousser une branche spécifique</h3>
+                <p>Envoie une branche secondaire de travail directement sur GitHub pour la partager avec votre binôme.</p>
+                <div class="code-box">
+                    <code id="cmd_push_branch">git push origin feature-login</code>
+                    <button class="copy-btn" onclick="copierCode('cmd_push_branch')"><i class="fa-regular fa-copy"></i> Copier</button>
+                </div>
+            </div>
+
+            <div class="command-card">
+                <h3>11. Récupérer et Fusionner (Pull)</h3>
+                <p>Télécharge les dernières modifications poussées par d'autres développeurs sur GitHub et les fusionne automatiquement dans votre code actuel.</p>
+                <div class="code-box">
+                    <code id="cmd_pull_git">git pull</code>
+                    <button class="copy-btn" onclick="copierCode('cmd_pull_git')"><i class="fa-regular fa-copy"></i> Copier</button>
+                </div>
+            </div>
+
+
+            <div class="section-title"><i class="fa-solid fa-magnifying-glass"></i> C. Comparaison et Statuts Courts</div>
+
+            <div class="command-card">
+                <h3>12. Statut en version courte</h3>
+                <p>Donne un aperçu très compact et rapide de l'état de vos fichiers (pratique lorsque vous avez beaucoup de modifications).</p>
+                <div class="code-box">
+                    <code id="cmd_status_s">git status -s</code>
+                    <button class="copy-btn" onclick="copierCode('cmd_status_s')"><i class="fa-regular fa-copy"></i> Copier</button>
+                </div>
+            </div>
+
+            <div class="command-card">
+                <h3>13. Comparer deux branches</h3>
+                <p>Affiche précisément toutes les lignes de code qui diffèrent entre deux branches distinctes avant de lancer une fusion.</p>
+                <div class="code-box">
+                    <code id="cmd_diff">git diff main..feature-login</code>
+                    <button class="copy-btn" onclick="copierCode('cmd_diff')"><i class="fa-regular fa-copy"></i> Copier</button>
+                </div>
+            </div>
+
+        </div>
+
+        <div id="tab-pratique" class="tab-content">
+            <div class="quiz-container">
+                <h2>Évaluation Intermédiaire</h2>
+                <p style="color: #64748b; margin-bottom: 20px;">Validez vos acquis sur les branches et l'interaction avec GitHub.</p>
+
+                <div class="question">
+                    <p>1. Quelle commande permet de créer ET de se déplacer sur une branche en une seule action ?</p>
+                    <ul class="options-list">
+                        <li class="option-item" onclick="verifierReponse(this, false)">git branch -new</li>
+                        <li class="option-item" onclick="verifierReponse(this, true)">git checkout -b ma-branche</li>
+                        <li class="option-item" onclick="verifierReponse(this, false)">git switch --create</li>
+                    </ul>
+                </div>
+
+                <div class="question">
+                    <p>2. Vous êtes sur "main". Comment fusionner les nouveautés de la branche "dev" dans "main" ?</p>
+                    <ul class="options-list">
+                        <li class="option-item" onclick="verifierReponse(this, true)">git merge dev</li>
+                        <li class="option-item" onclick="verifierReponse(this, false)">git branch --merge dev</li>
+                        <li class="option-item" onclick="verifierReponse(this, false)">git checkout dev</li>
+                    </ul>
+                </div>
+
+                <div class="question">
+                    <p>3. Quelle commande permet de voir les URL GitHub liées à votre dépôt local ?</p>
+                    <ul class="options-list">
+                        <li class="option-item" onclick="verifierReponse(this, false)">git remote --list</li>
+                        <li class="option-item" onclick="verifierReponse(this, false)">git config --url</li>
+                        <li class="option-item" onclick="verifierReponse(this, true)">git remote -v</li>
+                    </ul>
+                </div>
+
+                <div class="question">
+                    <p>4. Que fait exactement un "git pull" ?</p>
+                    <ul class="options-list">
+                        <li class="option-item" onclick="verifierReponse(this, true)">Il télécharge et fusionne les modifications de GitHub dans le code local</li>
+                        <li class="option-item" onclick="verifierReponse(this, false)">Il efface la branche locale courante</li>
+                        <li class="option-item" onclick="verifierReponse(this, false)">Il envoie vos propres commits sur le serveur web</li>
+                    </ul>
+                </div>
+
+                <div class="question">
+                    <p>5. Comment afficher l'état de ses fichiers sous un format très court et résumé ?</p>
+                    <ul class="options-list">
+                        <li class="option-item" onclick="verifierReponse(this, false)">git status --shortify</li>
+                        <li class="option-item" onclick="verifierReponse(this, true)">git status -s</li>
+                        <li class="option-item" onclick="verifierReponse(this, false)">git short-status</li>
+                    </ul>
+                </div>
+
+                <div class="score-box" id="score-display">Votre Score : 0 / 5</div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function copierCode(id) {
+            var texte = document.getElementById(id).innerText;
+            navigator.clipboard.writeText(texte).then(() => {
+                alert("Copié dans le presse-papiers : " + texte);
+            });
+        }
+
+        function switchTab(onglet) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            if(onglet === 'lecon') {
+                document.querySelector('.tabs button:nth-child(1)').classList.add('active');
+                document.getElementById('tab-lecon').classList.add('active');
+            } else {
+                document.querySelector('.tabs button:nth-child(2)').classList.add('active');
+                document.getElementById('tab-pratique').classList.add('active');
+            }
+        }
+
+        let score = 0;
+        let totalQuestions = 5;
+        
+        function verifierReponse(element, estCorrect) {
+            const parentUl = element.parentElement;
+            if(parentUl.classList.contains('deja-repondu')) return;
+            
+            parentUl.classList.add('deja-repondu');
+
+            if(estCorrect) {
+                element.classList.add('correct');
+                score++;
+            } else {
+                element.classList.add('incorrect');
+                Array.from(parentUl.children).forEach(li => {
+                    if(li.getAttribute('onclick').includes('true')) {
+                        li.classList.add('correct');
+                    }
+                });
+            }
+            
+            document.getElementById('score-display').innerText = `Votre Score : ${score} / ${totalQuestions}`;
+        }
+    </script>
+</body>
+</html>

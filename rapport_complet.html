@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rapport Académique : Git & GitHub</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* -------------------------------------
+           RESET & DESIGN SYSTEM (ACADÉMIQUE)
+        ------------------------------------- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Times New Roman', Times, serif; /* Style rapport traditionnel */
+        }
+
+        body {
+            background-color: #f1f5f9;
+            color: #1e293b;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* -------------------------------------
+           BARRE LATÉRALE : TABLE DES MATIÈRES
+        ------------------------------------- */
+        .sidebar {
+            width: 320px;
+            background: #1e293b;
+            color: #f8fafc;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            padding: 30px 20px;
+            overflow-y: auto;
+            border-right: 1px solid #334155;
+            z-index: 10;
+        }
+
+        .sidebar h3 {
+            font-family: 'Segoe UI', sans-serif;
+            font-size: 18px;
+            color: #38bdf8;
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #334155;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .menu-tree {
+            list-style: none;
+        }
+
+        .menu-item {
+            margin-bottom: 12px;
+        }
+
+        .menu-link {
+            display: block;
+            color: #cbd5e1;
+            text-decoration: none;
+            font-family: 'Segoe UI', sans-serif;
+            font-size: 14px;
+            padding: 8px 12px;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+        .menu-link:hover {
+            background: #334155;
+            color: #ffffff;
+            padding-left: 18px;
+        }
+
+        .menu-link.active {
+            background: #38bdf8;
+            color: #0f172a;
+            font-weight: bold;
+        }
+
+        /* Sub-items pour les sous-parties */
+        .sub-menu {
+            list-style: none;
+            margin-left: 15px;
+            margin-top: 5px;
+        }
+        .sub-menu .menu-link {
+            font-size: 13px;
+            color: #94a3b8;
+        }
+
+        /* -------------------------------------
+           ZONE DE LECTURE DU RAPPORT
+        ------------------------------------- */
+        .report-main {
+            margin-left: 320px; /* Équivalent à la largeur sidebar */
+            flex-grow: 1;
+            background: #ffffff;
+            padding: 60px 80px;
+            min-height: 100vh;
+            box-shadow: -5px 0 25px rgba(0,0,0,0.05);
+        }
+
+        /* Barre d'outils supérieure (Actions) */
+        .toolbar {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 40px;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 15px;
+        }
+
+        .btn-print {
+            background: #0f172a;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-family: 'Segoe UI', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.2s;
+        }
+
+        .btn-print:hover {
+            background: #38bdf8;
+            color: #0f172a;
+        }
+
+        /* Style de mise en page du rapport (Norme Universitaire) */
+        .report-header {
+            text-align: center;
+            margin-bottom: 60px;
+            border-bottom: 3px double #334155;
+            padding-bottom: 30px;
+        }
+
+        .report-header h1 {
+            font-size: 36px;
+            color: #0f172a;
+            margin-bottom: 15px;
+        }
+
+        .meta-author {
+            font-family: 'Segoe UI', sans-serif;
+            font-size: 14px;
+            color: #64748b;
+        }
+
+        /* Corps de section */
+        section {
+            margin-bottom: 50px;
+            scroll-margin-top: 40px; /* Évite que le titre soit caché sous le haut de l'écran */
+        }
+
+        h2 {
+            font-size: 26px;
+            color: #0f172a;
+            border-left: 5px solid #38bdf8;
+            padding-left: 15px;
+            margin-bottom: 20px;
+            padding-top: 10px;
+        }
+
+        h3 {
+            font-size: 20px;
+            color: #1e293b;
+            margin: 25px 0 15px 0;
+            text-decoration: underline;
+        }
+
+        p {
+            font-size: 16px;
+            line-height: 1.8;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        /* Listes de puces */
+        ul {
+            margin-left: 30px;
+            margin-bottom: 20px;
+        }
+
+        ul li {
+            font-size: 16px;
+            line-height: 1.8;
+            margin-bottom: 8px;
+        }
+
+        /* Tableaux */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px 0;
+            font-family: 'Segoe UI', sans-serif;
+            font-size: 14px;
+        }
+
+        table th, table td {
+            border: 1px solid #cbd5e1;
+            padding: 12px 15px;
+            text-align: left;
+        }
+
+        table th {
+            background-color: #f8fafc;
+            color: #0f172a;
+            font-weight: bold;
+        }
+
+        /* Bloc de commandes terminal (Code blocks) */
+        code {
+            background: #f1f5f9;
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: bold;
+            color: #0f172a;
+        }
+
+        .command-block {
+            background: #0f172a;
+            color: #38bdf8;
+            padding: 15px 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 14px;
+            margin-bottom: 20px;
+            border-left: 4px solid #a855f7;
+            overflow-x: auto;
+        }
+
+        .command-desc {
+            color: #94a3b8;
+            font-style: italic;
+            margin-bottom: 5px;
+            font-family: 'Segoe UI', sans-serif;
+            font-size: 13px;
+        }
+
+        /* -------------------------------------
+           RESPONSIVE ET LOGIQUE D'IMPRESSION
+        ------------------------------------- */
+        @media (max-width: 992px) {
+            .sidebar { display: none; }
+            .report-main { margin-left: 0; padding: 40px 30px; }
+        }
+
+        /* CSS Dédié à l'exportation PDF / Impression Word */
+        @media print {
+            .sidebar, .toolbar { display: none !important; }
+            .report-main { margin-left: 0 !important; padding: 0 !important; background: white; }
+            section { page-break-inside: avoid; } /* Empêche de couper une section au milieu */
+            body { background: white; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="sidebar">
+        <h3>Table des Matières</h3>
+        <ul class="menu-tree">
+            <li class="menu-item"><a href="#intro" class="menu-link active">1. Introduction & Définition</a></li>
+            <li class="menu-item"><a href="#probleme" class="menu-link">2. Écrasement & Fusion</a></li>
+            <li class="menu-item"><a href="#categories" class="menu-link">3. Centralisé vs Décentralisé</a></li>
+            <li class="menu-item"><a href="#securite" class="menu-link">4. HTTP vs HTTPS vs SSH</a></li>
+            <li class="menu-item"><a href="#workflow" class="menu-link">5. Workflow Local & Distant</a></li>
+            <li class="menu-item">
+                <a href="#commandes" class="menu-link">6. Guide des Commandes</a>
+                <ul class="sub-menu">
+                    <li><a href="#cmd-config" class="menu-link">A. Configuration</a></li>
+                    <li><a href="#cmd-crea" class="menu-link">B. Création & État</a></li>
+                    <li><a href="#cmd-cycle" class="menu-link">C. Enregistrement</a></li>
+                    <li><a href="#cmd-branch" class="menu-link">D. Branches & Fusions</a></li>
+                    <li><a href="#cmd-github" class="menu-link">E. Synchronisation</a></li>
+                </ul>
+            </li>
+            <li class="menu-item"><a href="#conclusion" class="menu-link">7. Conclusion du Rapport</a></li>
+        </ul>
+    </nav>
+
+    <main class="report-main">
+        
+        <div class="toolbar">
+            <button class="btn-print" onclick="window.print()">
+                <i class="fa-solid fa-file-pdf"></i> Imprimer / Exporter en PDF
+            </button>
+        </div>
+
+        <div class="report-header">
+            <h1>Le Système de Gestion de Versions (VCS), Git et GitHub</h1>
+            <div class="meta-author">Réalisé par : <strong>Imane OUJOUA</strong> &bull; Plateforme Académique</div>
+        </div>
+
+        <section id="intro">
+            <h2>1. Introduction et Définition</h2>
+            <p>Le <strong>SGV (Système de Gestion de Versions)</strong> ou <strong>VCS (Version Control System)</strong> est un logiciel spécialisé qui gère de manière rigoureuse l'évolution d'un ensemble de fichiers au fil du temps[cite: 3]. Il est conçu pour stocker l'intégralité des informations historiques de développement[cite: 4].</p>
+            <p>De manière générale, un tel système permet aux équipes techniques de :</p>
+            <ul>
+                <li>Stocker les informations et les différentes versions d’un projet de développement[cite: 6].</li>
+                <li>Permettre à plusieurs développeurs de collaborer et travailler efficacement sur le même projet[cite: 7].</li>
+                <li>Comparer avec précision l’état ancien et l’état actuel d’un même fichier[cite: 8].</li>
+                <li>Revenir à une version précédente ou restaurer le code si nécessaire[cite: 9].</li>
+            </ul>
+            
+            <h3>Objectifs majeurs d’un SGV</h3>
+            <p>L'implémentation professionnelle de cet outil répond à plusieurs objectifs cruciaux [cite: 10] : travailler collectivement sur une même base de code [cite: 11], conserver l’historique immuable des modifications [cite: 12], organiser la production grâce à la gestion par branches [cite: 13], utiliser des tags pour figer les versions importantes du logiciel [cite: 14], et ainsi grandement améliorer la sécurité et la stabilité du code source[cite: 15].</p>
+
+            <h3>Principes fondamentaux de fonctionnement</h3>
+            <ul>
+                <li><strong>Traçabilité :</strong> Chaque changement appliqué est signé et enregistré avec le nom de l'auteur, une date précise et un message d'explication[cite: 17].</li>
+                <li><strong>Dépôt :</strong> L'organisation repose sur l’existence d’un dépôt central associé à de multiples copies locales sur les machines de développement[cite: 18].</li>
+                <li><strong>Collaboration :</strong> Plusieurs développeurs travaillent en parallèle sur les mêmes fichiers sans risque de s'écraser mutuellement[cite: 19].</li>
+                <li><strong>Intégrité :</strong> La protection du code est garantie par des algorithmes de hachage (SHA-1) assurant qu'aucun fichier n'a été corrompu au fil du temps[cite: 20].</li>
+            </ul>
+        </section>
+
+        <section id="outline">
+            <h2>2. Le Problème de l'Écrasement et la Solution : La Fusion</h2>
+            <p>Avant l'avènement historique des systèmes de gestion de versions, la modification partagée d'un projet posait un problème majeur. Si deux personnes modifiaient simultanément le même fichier, le dernier développeur à cliquer sur "Enregistrer" écrasait de façon irrémédiable le travail fourni par le premier[cite: 22].</p>
+            
+            <h3>La Problématique d'Écrasement</h3>
+            <p>Prenons un cas pratique : si le Développeur A et le Développeur B éditent en même temps la même ligne du fichier <code>index.html</code> [cite: 24], sans l'usage de Git, l'un des deux verra son travail définitivement effacé et perdu[cite: 25].</p>
+
+            <h3>La Solution : Le Fusionnage (Merge)</h3>
+            <p>Pour contrer cela, Git implémente un système intelligent et automatisé de fusion de données[cite: 26, 27]:</p>
+            <ul>
+                <li><strong>Auto-merge :</strong> Si les modifications de l'équipe ciblent des fichiers ou des lignes distinctes, Git résout et fusionne automatiquement les deux versions[cite: 28].</li>
+                <li><strong>Conflit de fusion :</strong> Si les deux programmeurs éditent de façon identique la <strong>même ligne</strong>, Git interrompt temporairement l'action et demande manuellement de choisir quelle ligne conserver[cite: 29]. C'est l'assurance absolue qu'aucune donnée n'est perdue par inadvertance[cite: 30].</li>
+            </ul>
+        </section>
+
+        <section id="categories">
+            <h2>3. Catégories de SGV : Centralisé vs Décentralisé</h2>
+            <p>L'architecture réseau des gestionnaires de versions se sépare en deux modèles distincts aux conséquences majeures sur la sécurité et l'organisation du travail[cite: 31]:</p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Caractéristique</th>
+                        <th>SGV Centralisé (ex: SVN)</th>
+                        <th>SGV Décentralisé (ex: Git)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Stockage</strong></td>
+                        <td>Un seul serveur central possède l'historique complet du projet[cite: 32].</td>
+                        <td>Chaque développeur possède une copie intégrale et locale (clone) du dépôt[cite: 32].</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Connexion</strong></td>
+                        <td>Connexion internet ou réseau obligatoire pour exécuter la moindre action[cite: 32].</td>
+                        <td>Travail en local total (hors-ligne). On ne se connecte que pour partager le travail achevé[cite: 32].</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Risque</strong></td>
+                        <td>Si le serveur central tombe en panne, l'intégralité de l'historique est perdue[cite: 32].</td>
+                        <td>Si le serveur central tombe, n'importe quel ordinateur de l'équipe peut le restaurer à l'identique[cite: 32].</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="securite">
+            <h2>4. Sécurité et Communication : HTTP vs HTTPS vs SSH</h2>
+            <p>L'échange sécurisé du code source entre votre station de travail locale (votre PC) et la plateforme cloud publique ou privée (GitHub) s'opère par différents protocoles de communication réseau[cite: 34]:</p>
+            <ul>
+                <li><strong>HTTP (Non sécurisé) :</strong> Les informations transitent en texte clair sur le réseau. De ce fait, il n'est aujourd'hui presque plus utilisé pour manipuler des dépôts Git[cite: 35].</li>
+                <li><strong>HTTPS (Sécurisé par Chiffrement) :</strong> Ce protocole crypte la connexion via un certificat SSL[cite: 36]. Pour valider les actions de l'utilisateur, GitHub exige désormais la fourniture d'un <strong>Token (jeton d'accès personnel)</strong> en lieu et place du mot de passe standard pour renforcer la sécurité[cite: 37].</li>
+                <li><strong>SSH (Sécurisé par Clés asymétriques) :</strong> Ce protocole associe une clé privée confidentielle (générée sur votre machine locale) à une clé publique stockée directement sur votre profil GitHub[cite: 38]. C'est la méthode de référence, hautement sécurisée et rapide, puisqu'elle dispense l'utilisateur de saisir un mot de passe à chaque transaction[cite: 39].</li>
+            </ul>
+        </section>
+
+        <section id="workflow">
+            <h2>5. Le Workflow (Flux de travail) : Local vs Distant</h2>
+            <p>Le développement avec l'outil Git segmente les environnements pour isoler les phases de tests de la mise en commun collective[cite: 40]:</p>
+            <ul>
+                <li><strong>Le Dépôt Local (Votre PC) :</strong> Il constitue votre espace privé de travail. C'est ici que vous modifiez vos fichiers et structurez vos étapes d'avancement par la création de <strong>Commits</strong>[cite: 42].</li>
+                <li><strong>Le Dépôt Distant (GitHub) :</strong> Hébergé dans le cloud, il se présente comme le miroir officiel de référence du projet, accessible par tous les membres autorisés de l'équipe[cite: 43].</li>
+            </ul>
+        </section>
+
+        <section id="commandes">
+            <h2>6. Les Commandes de Base (Le Guide Complet)</h2>
+            <p>Pour manipuler efficacement les fichiers de votre projet, voici le référentiel complet des commandes à exécuter au sein de votre terminal informatique[cite: 44]:</p>
+
+            <div id="cmd-config">
+                <h3>A. Configuration (Initiale)</h3>
+                <p>À paramétrer impérativement lors de la première installation de Git sur la machine[cite: 45]:</p>
+                <div class="command-desc">Définit le nom d'usage public de l'auteur des commits :</div>
+                <div class="command-block">git config --global user.name "TonNom" [cite: 46]</div>
+                
+                <div class="command-desc">Définit l'adresse e-mail reliée au compte GitHub :</div>
+                <div class="command-block">git config --global user.email "ton@email.com" [cite: 47]</div>
+            </div>
+
+            <div id="cmd-crea">
+                <h3>B. Création et État</h3>
+                <div class="command-desc">Initialise et crée un nouveau dépôt Git caché au sein du dossier courant :</div>
+                <div class="command-block">git init [cite: 49]</div>
+                
+                <div class="command-desc">Affiche l'état des fichiers (fichiers modifiés, suivis ou non suivis) :</div>
+                <div class="command-block">git status [cite: 50]</div>
+                
+                <div class="command-desc">Affiche l'historique chronologique complet des commits appliqués :</div>
+                <div class="command-block">git log [cite: 51]</div>
+            </div>
+
+            <div id="cmd-cycle">
+                <h3>C. Le Cycle d'Enregistrement</h3>
+                <div class="command-desc">Ajoute un fichier ciblé à l'index de préparation (Staging Area) :</div>
+                <div class="command-block">git add &lt;nom_du_fichier&gt; [cite: 53]</div>
+                
+                <div class="command-desc">Enregistre de façon définitive la version dans l'historique local avec un message contextuel :</div>
+                <div class="command-block">git commit -m "Message clair" [cite: 54]</div>
+            </div>
+
+            <div id="cmd-branch">
+                <h3>D. Gestion des Branches et Fusion</h3>
+                <div class="command-desc">Liste l'ensemble des branches créées dans le projet local :</div>
+                <div class="command-block">git branch [cite: 56]</div>
+                
+                <div class="command-desc">Crée une nouvelle ligne de développement parallèle (ex: dev) :</div>
+                <div class="command-block">git branch &lt;nom&gt; [cite: 57]</div>
+                
+                <div class="command-desc">Bascule et déplace l'environnement de travail sur la branche indiquée :</div>
+                <div class="command-block">git checkout &lt;nom&gt; [cite: 58]</div>
+                
+                <div class="command-desc">Fusionne les modifications de la branche spécifiée dans la branche active actuelle :</div>
+                <div class="command-block">git merge &lt;nom&gt; [cite: 59]</div>
+                
+                <div class="command-desc">Réécrit l'historique de sorte à placer vos commits locaux à la suite de la branche principale :</div>
+                <div class="command-block">git rebase [cite: 60]</div>
+            </div>
+
+            <div id="cmd-github">
+                <h3>E. Communication et Synchronisation avec GitHub</h3>
+                <div class="command-desc">Établit le lien logique entre votre dossier local et le serveur distant GitHub :</div>
+                <div class="command-block">git remote add origin &lt;lien_https_ou_ssh&gt; [cite: 62]</div>
+                
+                <div class="command-desc">Propulse et envoie l'ensemble de vos commits locaux vers le serveur GitHub :</div>
+                <div class="command-block">git push origin main [cite: 63]</div>
+                
+                <div class="command-desc">Rapatrie et fusionne instantanément les changements du serveur vers votre poste local :</div>
+                <div class="command-block">git pull [cite: 64]</div>
+                
+                <div class="command-desc">Télécharge une copie complète d'un projet déjà existant depuis GitHub sur votre ordinateur :</div>
+                <div class="command-block">git clone &lt;lien&gt; [cite: 65]</div>
+            </div>
+        </section>
+
+        <section id="conclusion">
+            <h2>7. Conclusion</h2>
+            <p>En somme, Git et GitHub s'imposent désormais comme des outils d'infrastructure absolument vitaux dans le paysage de l'ingénierie logicielle moderne[cite: 67]. En apportant des réponses concrètes aux défis de la collaboration de masse, ils sécurisent le code source des entreprises [cite: 67], assurent une traçabilité totale et permettent d'organiser les projets informatiques avec une efficacité inégalée[cite: 67]. Leur maîtrise constitue le socle fondamental de tout parcours de formation technique en développement[cite: 67].</p>
+        </section>
+
+    </main>
+
+    <script>
+        const sections = document.querySelectorAll("section");
+        const navLinks = document.querySelectorAll(".menu-link");
+
+        window.addEventListener("scroll", () => {
+            let currentSectionId = "";
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (pageYOffset >= sectionTop - 60) {
+                    currentSectionId = section.getAttribute("id");
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove("active");
+                if (link.getAttribute("href") === `#${currentSectionId}`) {
+                    link.classList.add("active");
+                }
+            });
+        });
+    </script>
+</body>
+</html>

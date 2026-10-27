@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitMastery - Espace Académique</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* -------------------------------------
+           RESET & REGLAGES GENERAUX
+        ------------------------------------- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f4f7f6;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .container {
+            width: 85%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* -------------------------------------
+           1. EN-TÊTE / HEADER (LOGO & NAV)
+        ------------------------------------- */
+        header {
+            background: #ffffff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #24292e;
+        }
+
+        .logo i {
+            margin-right: 10px;
+            color: #2f80ed;
+            font-size: 28px;
+        }
+
+        .logo span {
+            color: #2f80ed;
+        }
+
+        .user-profile {
+            background: #2f80ed;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 14px;
+            transition: background 0.3s;
+        }
+
+        .user-profile:hover {
+            background: #1b66ca;
+        }
+
+        /* -------------------------------------
+           2. FIL D'ARIANE (NAVIGATION BREADCRUMB)
+        ------------------------------------- */
+        .breadcrumb-section {
+            background: #ffffff;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 15px 0;
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            color: #64748b;
+        }
+
+        .breadcrumb a {
+            color: #2f80ed;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .breadcrumb a:hover {
+            color: #1b66ca;
+            text-decoration: underline;
+        }
+
+        .breadcrumb i {
+            font-size: 12px;
+            color: #94a3b8;
+        }
+
+        /* -------------------------------------
+           3. ZONE DE COURS / STRUCTURE INTERACTIVE
+        ------------------------------------- */
+        main {
+            flex: 1;
+            padding: 40px 0 60px 0;
+        }
+
+        .academic-header {
+            margin-bottom: 35px;
+        }
+
+        .academic-title {
+            font-size: 28px;
+            color: #1e293b;
+            font-weight: 700;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .academic-title i {
+            color: #a855f7;
+        }
+
+        .academic-desc {
+            font-size: 15px;
+            color: #64748b;
+            line-height: 1.6;
+            max-width: 800px;
+        }
+
+        /* Layout Onglets + Contenu */
+        .cours-layout {
+            display: flex;
+            gap: 30px;
+            align-items: flex-start;
+        }
+
+        @media (max-width: 992px) {
+            .cours-layout {
+                flex-direction: column;
+            }
+        }
+
+        /* Barre latérale gauche (Boutons) */
+        .cours-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 300px;
+            flex-shrink: 0;
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.02);
+        }
+
+        @media (max-width: 992px) {
+            .cours-sidebar {
+                width: 100%;
+            }
+        }
+
+        .cours-tab-btn {
+            padding: 14px 16px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            text-align: left;
+            font-size: 14px;
+            font-weight: 600;
+            color: #475569;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .cours-tab-btn:hover {
+            background: #f1f5f9;
+            color: #0f172a;
+            border-color: #cbd5e1;
+            transform: translateX(3px);
+        }
+
+        @media (max-width: 992px) {
+            .cours-tab-btn:hover { transform: none; }
+        }
+
+        .cours-tab-btn.active-tab {
+            background: #a855f7;
+            color: white;
+            border-color: #a855f7;
+            box-shadow: 0 4px 12px rgba(168, 85, 247, 0.25);
+        }
+
+        /* Fenêtre de Contenu à Droite */
+        .cours-content-box {
+            flex-grow: 1;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.03);
+            min-height: 450px;
+        }
+
+        @media (max-width: 576px) {
+            .cours-content-box { padding: 25px; }
+        }
+
+        .chapitre-content {
+            display: none;
+            animation: fadeInCours 0.4s ease forwards;
+        }
+
+        .chapitre-content.display-active {
+            display: block;
+        }
+
+        .chapitre-content h3 {
+            font-size: 22px;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 18px;
+            border-bottom: 2px solid #f1f5f9;
+            padding-bottom: 12px;
+        }
+
+        .chapitre-content p {
+            font-size: 15px;
+            color: #475569;
+            line-height: 1.7;
+            margin-bottom: 20px;
+        }
+
+        /* Cadres Photo/Alerte Réactifs */
+        .reactive-photo-box {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 22px;
+            border-radius: 10px;
+            margin: 25px 0;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+
+        .reactive-photo-box:hover {
+            transform: scale(1.015);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+        }
+
+        .setup-box { background: #f0fdfa; border-left: 5px solid #0d9488; }
+        .alert-box { background: #fff7ed; border-left: 5px solid #ea580c; }
+
+        .photo-icon { font-size: 42px; flex-shrink: 0; }
+        .setup-box .photo-icon { color: #0d9488; }
+        .alert-box .photo-icon { color: #ea580c; }
+
+        .reactive-photo-box strong { font-size: 16px; color: #0f172a; display: block; margin-bottom: 6px; }
+        .reactive-photo-box p { font-size: 14px; color: #475569; margin: 0; line-height: 1.6; }
+
+        /* Listes de cours stylisées */
+        .points-cours { list-style: none; margin: 20px 0; }
+        .points-cours li { font-size: 15px; margin-bottom: 14px; display: flex; align-items: flex-start; gap: 12px; color: #475569; line-height: 1.5; }
+        .points-cours li i { margin-top: 3px; font-size: 16px; flex-shrink: 0; }
+
+        /* Tableaux Comparatifs */
+        .table-cours { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 14px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
+        .table-cours th, .table-cours td { padding: 16px; border: 1px solid #e2e8f0; text-align: left; }
+        .table-cours th { background: #f8fafc; color: #0f172a; font-weight: 700; }
+        .table-cours td { color: #475569; line-height: 1.6; }
+        @media (max-width: 600px) {
+            .table-cours { display: block; overflow-x: auto; }
+        }
+
+        /* Grille des mini-projets */
+        .projets-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 25px; }
+        @media (max-width: 650px) { .projets-grid { grid-template-columns: 1fr; } }
+
+        .mini-projet-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 22px;
+            text-align: center;
+            transition: all 0.25s ease;
+        }
+
+        .mini-projet-card:hover {
+            border-color: #a855f7;
+            background: #faf5ff;
+            transform: translateY(-4px);
+            box-shadow: 0 6px 18px rgba(168, 85, 247, 0.08);
+        }
+
+        .mini-projet-card i { font-size: 38px; color: #64748b; margin-bottom: 12px; display: block; transition: color 0.2s; }
+        .mini-projet-card:hover i { color: #a855f7; }
+        .mini-projet-card strong { font-size: 16px; color: #0f172a; display: block; margin-bottom: 6px; }
+        .mini-projet-card p { font-size: 13px; color: #64748b; margin: 0; line-height: 1.6; }
+
+        @keyframes fadeInCours {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* -------------------------------------
+           4. PIED DE PAGE / FOOTER
+        ------------------------------------- */
+        footer {
+            background-color: #1e293b;
+            color: #f8fafc;
+            padding: 60px 0 20px 0;
+            font-size: 14px;
+            margin-top: 60px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-col h4 {
+            color: #ffffff;
+            font-size: 16px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .footer-col h4::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -6px;
+            width: 35px;
+            height: 2px;
+            background-color: #2f80ed;
+        }
+
+        .footer-col ul { list-style: none; }
+        .footer-col ul li { margin-bottom: 12px; }
+        .footer-col ul li a { color: #94a3b8; transition: color 0.2s; }
+        .footer-col ul li a:hover { color: #ffffff; padding-left: 5px; }
+
+        .social-links a {
+            display: inline-block;
+            width: 35px;
+            height: 35px;
+            background-color: #334155;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 35px;
+            margin-right: 10px;
+            color: #cbd5e1;
+            transition: all 0.3s;
+        }
+
+        .social-links a:hover {
+            background-color: #2f80ed;
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 25px;
+            border-top: 1px solid #334155;
+            color: #64748b;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container">
+            <div class="logo" onclick="window.location.href='index.html'" style="cursor: pointer;">
+                <i class="fa-brands fa-github"></i> Git<span>hub</span>_Schools
+            </div>
+            <a href="mon-espace.html" class="user-profile" id="nav-username">
+                <i class="fa-regular fa-user"></i> Mon Espace
+            </a>
+        </div>
+    </header>
+
+    <div class="breadcrumb-section">
+        <div class="container breadcrumb">
+            <a href="index.html">Accueil</a>
+            <i class="fa-solid fa-chevron-right"></i>
+            <span>Espace Académique</span>
+        </div>
+    </div>
+
+    <main class="container">
+        <div class="academic-header">
+            <div class="academic-title">
+                <i class="fa-solid fa-book-open"></i> 
+                Espace Académique : Guide Théorique Complet
+            </div>
+            <p class="academic-desc">
+                Explorez l'ensemble des concepts théoriques essentiels pour assimiler le fonctionnement intime de Git et GitHub. Prenez le temps de lire chaque chapitre attentivement avant de vous lancer dans le terminal.
+            </p>
+        </div>
+
+        <div class="cours-layout">
+            <div class="cours-sidebar">
+                <button class="cours-tab-btn active-tab" onclick="switchChapitre(event, 'chap-intro')">
+                    <i class="fa-solid fa-info-circle"></i> 1. Introduction & Définition
+                </button>
+                <button class="cours-tab-btn" onclick="switchChapitre(event, 'chap-objectifs')">
+                    <i class="fa-solid fa-bullseye"></i> 2. Objectifs d'un SGV
+                </button>
+                <button class="cours-tab-btn" onclick="switchChapitre(event, 'chap-vs')">
+                    <i class="fa-solid fa-code-compare"></i> 3. Git vs GitHub
+                </button>
+                <button class="cours-tab-btn" onclick="switchChapitre(event, 'chap-fusion')">
+                    <i class="fa-solid fa-code-merge"></i> 4. Le Problème & La Fusion
+                </button>
+                <button class="cours-tab-btn" onclick="switchChapitre(event, 'chap-projets')">
+                    <i class="fa-solid fa-folder-open"></i> 5. Exemples de Projets
+                </button>
+            </div>
+
+            <div class="cours-content-box">
+                
+                <div id="chap-intro" class="chapitre-content display-active">
+                    <h3>Le Système de Gestion de Versions (VCS / SGV)</h3>
+                    <p>Un <strong>SGV (Système de Gestion de Versions)</strong> ou <em>Version Control System (VCS)</em> est un outil logiciel spécialisé conçu pour suivre, enregistrer et organiser l'évolution d'un ensemble de fichiers (généralement du code source) au fil du temps.</p>
+                    <p>Il agit comme une machine à voyager dans le temps pour votre projet, retenant précisément l'état de chaque fichier à n'importe quel instant de son histoire.</p>
+                    
+                    <div class="reactive-photo-box setup-box">
+                        <i class="fa-solid fa-database photo-icon"></i>
+                        <div>
+                            <strong>Principe de Traçabilité & Intégrité</strong>
+                            <p>Chaque changement ou modification est signé électroniquement avec le nom de l'auteur, la date exacte et un message explicite. Git utilise le mécanisme de hachage hautement sécurisé <strong>SHA-1</strong> pour garantir que votre code n'est ni altéré ni corrompu au cours du temps.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="chap-objectifs" class="chapitre-content">
+                    <h3>Quels sont les objectifs majeurs d'un SGV ?</h3>
+                    <p>L'intégration d'un gestionnaire de versions moderne dans vos habitudes de développement vous permet d'atteindre les standards professionnels indispensables suivants :</p>
+                    
+                    <ul class="points-cours">
+                        <li><i class="fa-solid fa-check-circle" style="color:#10b981;"></i> <strong>Coopération fluide :</strong> Permettre à des dizaines de développeurs de travailler simultanément sur un même projet sans s'écraser mutuellement les fichiers.</li>
+                        <li><i class="fa-solid fa-check-circle" style="color:#10b981;"></i> <strong>Historique immuable :</strong> Conserver une traçabilité indestructible de chaque modification pour pouvoir diagnostiquer et restaurer le code en cas de bug.</li>
+                        <li><i class="fa-solid fa-check-circle" style="color:#10b981;"></i> <strong>Gestion par branches :</strong> Isoler complètement le développement de nouvelles fonctionnalités ou la correction de bugs du code stable de production.</li>
+                        <li><i class="fa-solid fa-check-circle" style="color:#10b981;"></i> <strong>Tags & Versions :</strong> Marquer précisément des jalons stables clés dans l'historique de l'application (ex : release <code>v1.0.0</code>).</li>
+                    </ul>
+                </div>
+
+                <div id="chap-vs" class="chapitre-content">
+                    <h3>Différence Fondamentale : Git vs GitHub</h3>
+                    <p>Il s'agit de la confusion la plus fréquente chez les profils juniors. Ces deux outils sont complémentaires mais radicalement distincts :</p>
+
+                    <table class="table-cours">
+                        <thead>
+                            <tr>
+                                <th><i class="fa-brands fa-git-alt"></i> GIT (Le Logiciel)</th>
+                                <th><i class="fa-brands fa-github"></i> GITHUB (La Plateforme)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>C'est un outil **local**, installé directement sur le système d'exploitation de votre ordinateur.</td>
+                                <td>C'est un service d'hébergement **en ligne** (dans le Cloud), accessible via un navigateur web.</td>
+                            </tr>
+                            <tr>
+                                <td>Il gère l'historique, crée les snapshots de code (commits) et manipule vos branches locales.</td>
+                                <td>Il stocke vos dépôts distants en sécurité et y greffe des outils collaboratifs (Pull Requests, Issues).</td>
+                            </tr>
+                            <tr>
+                                <td>Il fonctionne à 100% **sans aucune connexion Internet**.</td>
+                                <td>Il exige une connexion réseau pour synchroniser votre travail local avec le serveur (`git push` / `git pull`).</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div id="chap-fusion" class="chapitre-content">
+                    <h3>Le Problème de l'Écrasement & La Fusion</h3>
+                    <p><strong>La Problématique historique :</strong> Avant l'avènement des VCS, si le Développeur A et le Développeur B éditaient simultanément le même fichier, la dernière personne qui cliquait sur "Enregistrer" détruisait à tout jamais les lignes de code écrites par la première.</p>
+                    
+                    <div class="reactive-photo-box alert-box">
+                        <i class="fa-solid fa-code-merge photo-icon"></i>
+                        <div>
+                            <strong>La Solution magique : Le Fusionnage (Merge)</strong>
+                            <p>Git analyse de manière chirurgicale les blocs de lignes modifiés. Si les éditions touchent des fichiers différents ou des zones séparées, il fusionne le tout **automatiquement**. Si la modification cible exactement la même ligne, Git bloque prudemment l'action et lève un conflit clair, vous laissant maître de la décision finale.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="chap-projets" class="chapitre-content">
+                    <h3>Exemples de Projets réels sous Git</h3>
+                    <p>Voici les architectures types qui exploitent la pleine puissance de Git et GitHub pour concevoir, suivre et déployer des applications modernes :</p>
+                    
+                    <div class="projets-grid">
+                        <div class="mini-projet-card">
+                            <i class="fa-brands fa-html5"></i>
+                            <strong>Site Web Statique</strong>
+                            <p>Historisation complète des documents HTML, CSS et JavaScript. Intégration transparente avec GitHub Pages pour un déploiement public et gratuit en quelques secondes.</p>
+                        </div>
+                        <div class="mini-projet-card">
+                            <i class="fa-brands fa-python"></i>
+                            <strong>Script & Application Python</strong>
+                            <p>Suivi rigoureux du code algorithmique et isolement total des paquets et environnements virtuels locaux via l'usage rigoureux du fichier <code>.gitignore</code>.</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container footer-grid">
+            <div class="footer-col">
+                <h4>À propos</h4>
+                <ul>
+                    <li><a href="#">Notre Mission</a></li>
+                    <li><a href="#">Documentation Officielle</a></li>
+                    <li><a href="#">Conditions d'utilisation</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-col">
+                <h4>Ressources mondiales</h4>
+                <ul>
+                    <li><a href="https://git-scm.com" target="_blank">Git SCM Official</a></li>
+                    <li><a href="https://github.com" target="_blank">GitHub Platform</a></li>
+                    <li><a href="#">Communauté Francophone</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-col">
+                <h4>Contact & Support</h4>
+                <ul>
+                    <li><a href="mailto:support@gitmasterschool.com"><i class="fa-regular fa-envelope"></i> support@gitschool.com</a></li>
+                    <li><a href="#"><i class="fa-solid fa-headset"></i> Centre d'aide international</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-col">
+                <h4>Suivez-nous</h4>
+                <div class="social-links">
+                    <a href="#"><i class="fa-brands fa-linkedin-in"></i></a>
+                    <a href="#"><i class="fa-brands fa-github"></i></a>
+                    <a href="#"><i class="fa-brands fa-twitter"></i></a>
+                    <a href="#"><i class="fa-brands fa-youtube"></i></a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2026 GitHub_Schools Platform. Conçu pour les étudiants du monde entier.</p>
+        </div>
+    </footer>
+
+    <script>
+        window.onload = function() {
+            // SÉCURITÉ : Vérification obligatoire du profil étudiant
+            const nomEtudiant = localStorage.getItem('git_student_name');
+            if (!nomEtudiant) {
+                window.location.href = 'connexion.html';
+                return; 
+            }
+            
+            // Personnalisation dynamique du header
+            document.getElementById('nav-username').innerHTML = `<i class="fa-regular fa-user"></i> ${nomEtudiant}`;
+        };
+
+        // Fonction d'interactivité des chapitres (onglets verticaux)
+        function switchChapitre(evt, chapitreId) {
+            // Masquer tous les paragraphes/chapitres
+            const contenus = document.getElementsByClassName("chapitre-content");
+            for (let i = 0; i < contenus.length; i++) {
+                contenus[i].classList.remove("display-active");
+            }
+
+            // Retirer le focus/design actif de tous les onglets de gauche
+            const boutons = document.getElementsByClassName("cours-tab-btn");
+            for (let i = 0; i < boutons.length; i++) {
+                boutons[i].classList.remove("active-tab");
+            }
+
+            // Activer uniquement le chapitre sélectionné et son bouton associé
+            document.getElementById(chapitreId).classList.add("display-active");
+            evt.currentTarget.classList.add("active-tab");
+        }
+    </script>
+</body>
+</html>

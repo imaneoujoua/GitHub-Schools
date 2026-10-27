@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Espace Étudiant - GitHub Schools</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* -------------------------------------
+           RESET & STYLE GÉNÉRAL
+        ------------------------------------- */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        body { background-color: #0f172a; color: #e2e8f0; display: flex; min-height: 100vh; align-items: center; justify-content: center; padding: 20px; }
+        
+        .container { background: #1e293b; padding: 40px; border-radius: 12px; width: 100%; max-width: 500px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); border: 1px solid #334155; transition: max-width 0.3s; }
+        .container.large { max-width: 650px; } 
+
+        h2 { text-align: center; margin-bottom: 5px; color: #38bdf8; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        p.subtitle { text-align: center; color: #94a3b8; font-size: 14px; margin-bottom: 25px; }
+        
+        /* Système d'onglets */
+        .tab-system { display: flex; gap: 10px; margin-bottom: 25px; border-bottom: 1px solid #334155; padding-bottom: 10px; }
+        .tab-btn { flex: 1; padding: 10px; background: none; border: none; color: #94a3b8; font-size: 15px; font-weight: bold; cursor: pointer; transition: all 0.2s; border-radius: 6px; }
+        .tab-btn:hover { background: #1e293b; color: #e2e8f0; }
+        .tab-btn.active { color: #38bdf8; background: #0f172a; border: 1px solid #334155; }
+
+        /* Formulaires */
+        .form-section { display: none; }
+        .form-section.active { display: block; }
+        
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        @media (max-width: 550px) { .form-grid { grid-template-columns: 1fr; } }
+        .full-width { grid-column: span 2; }
+        @media (max-width: 550px) { .full-width { grid-column: span 1; } }
+
+        .form-group { margin-bottom: 18px; }
+        label { display: block; font-size: 13px; margin-bottom: 6px; color: #cbd5e1; font-weight: 500; }
+        .required { color: #ef4444; margin-left: 3px; }
+
+        .input-wrapper { position: relative; }
+        .input-wrapper i { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #64748b; font-size: 15px; z-index: 2; }
+        
+        input, select { width: 100%; padding: 10px 12px 10px 38px; background: #0f172a; border: 1px solid #475569; border-radius: 6px; color: white; outline: none; font-size: 14px; transition: all 0.2s; }
+        input:focus, select:focus { border-color: #38bdf8; box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15); }
+        
+        .date-inputs { display: flex; gap: 8px; }
+        .date-inputs input { padding-left: 10px; text-align: center; }
+
+        .radio-group { display: flex; align-items: center; gap: 15px; padding: 10px; background: #0f172a; border: 1px solid #475569; border-radius: 6px; height: 42px; }
+        .radio-label { display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 14px; margin: 0; }
+        .radio-group input[type="radio"] { width: auto; padding: 0; cursor: pointer; }
+
+        /* Boutons */
+        .btn-submit { width: 100%; padding: 12px; background: #38bdf8; color: #0f172a; border: none; border-radius: 6px; font-weight: bold; font-size: 15px; cursor: pointer; transition: all 0.2s; display: flex; justify-content: center; align-items: center; gap: 8px; margin-top: 10px; }
+        .btn-submit:hover { background: #0ea5e9; }
+        .btn-reset { width: 100%; padding: 12px; background: #475569; color: white; border: none; border-radius: 6px; font-weight: bold; font-size: 15px; cursor: pointer; transition: all 0.2s; display: flex; justify-content: center; align-items: center; gap: 8px; margin-top: 10px; }
+        .btn-reset:hover { background: #334155; }
+        .button-group { display: flex; gap: 10px; }
+
+        /* Alerte Erreur */
+        .error-box { background: #451a03; border: 1px solid #ea580c; color: #fdba74; padding: 12px; border-radius: 6px; font-size: 13px; margin-bottom: 20px; display: none; align-items: center; gap: 10px; }
+    </style>
+</head>
+<body>
+
+    <div class="container" id="mainContainer">
+        <h2><i class="fa-solid fa-code-branch"></i> GitHub Schools</h2>
+        <p class="subtitle" id="pageSubtitle">Connectez-vous pour accéder à votre espace</p>
+
+        <div class="tab-system">
+            <button class="tab-btn active" id="btnTabLogin" onclick="switchTab('login')"><i class="fa-solid fa-user-check"></i> Connexion</button>
+            <button class="tab-btn" id="btnTabRegister" onclick="switchTab('register')"><i class="fa-solid fa-user-plus"></i> Inscription</button>
+        </div>
+
+        <div class="error-box" id="errorBlock">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <span id="errorText">Erreur de saisie.</span>
+        </div>
+
+        <form id="loginForm" class="form-section active" onsubmit="gererConnexion(event)">
+            <div class="form-group">
+                <label for="login_user">Nom d'utilisateur / Pseudo<span class="required">*</span></label>
+                <div class="input-wrapper">
+                    <i class="fa-regular fa-user"></i>
+                    <input type="text" id="login_user" name="username" placeholder="Ex: AlexDev2026" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="login_pass">Mot de passe sécurisé<span class="required">*</span></label>
+                <div class="input-wrapper">
+                    <i class="fa-solid fa-lock"></i>
+                    <input type="password" id="login_pass" name="password" placeholder="••••••••" required>
+                </div>
+            </div>
+            <button type="submit" class="btn-submit">
+                <i class="fa-solid fa-right-to-bracket"></i> Se connecter à l'espace interactif
+            </button>
+        </form>
+
+        <form id="registerForm" class="form-section" onsubmit="gererInscription(event)">
+            <div class="form-grid">
+                
+                <div class="form-group">
+                    <label>*Civilité</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-venus-mars"></i>
+                        <select name="civilite">
+                            <option value="Mademoiselle">Mademoiselle</option>
+                            <option value="Monsieur">Monsieur</option>
+                            <option value="Autre">Autre</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>*Pseudo GitHub / Identifiant</label>
+                    <div class="input-wrapper">
+                        <i class="fa-brands fa-github"></i>
+                        <input type="text" id="reg_username" name="username" placeholder="Ex: ImaneOuj26" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>*Nom</label>
+                    <div class="input-wrapper">
+                        <i class="fa-regular fa-id-card"></i>
+                        <input type="text" id="reg_nom" name="nom" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>*Prénom</label>
+                    <div class="input-wrapper">
+                        <i class="fa-regular fa-id-card"></i>
+                        <input type="text" id="reg_prenom" name="prenom" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>*Date de naissance (JJ / MM / AAAA)</label>
+                    <div class="date-inputs">
+                        <input type="text" id="birth_day" placeholder="JJ" maxlength="2" style="width: 30%;" required>
+                        <input type="text" id="birth_month" placeholder="MM" maxlength="2" style="width: 30%;" required>
+                        <input type="text" id="birth_year" placeholder="AAAA" maxlength="4" style="width: 40%;" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>*Nationalité</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-flag"></i>
+                        <input type="text" name="nationalite" placeholder="Ex: Marocaine" required>
+                    </div>
+                </div>
+
+                <div class="form-group full-width">
+                    <label>*Adresse</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-location-dot"></i>
+                        <input type="text" name="adresse" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>*Code Postal</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-map-pin"></i>
+                        <input type="text" name="code_postal" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>*Ville</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-building"></i>
+                        <input type="text" name="ville" required>
+                    </div>
+                </div>
+
+                <div class="form-group full-width">
+                    <label>*Pays</label>
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <div class="radio-group" style="flex: 1;">
+                            <label class="radio-label"><input type="radio" name="pays_radio" value="Maroc" checked onclick="toggleAutrePays(false)"> Maroc</label>
+                            <label class="radio-label"><input type="radio" name="pays_radio" value="Autre" onclick="toggleAutrePays(true)"> Autre</label>
+                        </div>
+                        <input type="text" id="autre_pays_input" placeholder="Spécifiez le pays" style="flex: 1; display: none;">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>*Tél. portable</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-mobile-screen-button"></i>
+                        <input type="tel" name="telephone" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>*E-mail</label>
+                    <div class="input-wrapper">
+                        <i class="fa-regular fa-envelope"></i>
+                        <input type="email" name="email" required>
+                    </div>
+                </div>
+
+                <div class="form-group full-width">
+                    <label>*Votre Profil Actuel (Niveau d'études ou Travail)</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-graduation-cap"></i>
+                        <select name="niveau_profil" required>
+                            <option value="" disabled selected>Choisissez votre situation...</option>
+                            <option value="Lycee">Lycéen / Enseignement Secondaire</option>
+                            <option value="Universite">Étudiant (Université / Grande École)</option>
+                            <option value="Stagiaire">Stagiaire en Formation Professionnelle</option>
+                            <option value="Professionnel">Professionnel / Développeur Actif</option>
+                            <option value="Autre">Autre situation</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group full-width">
+                    <label>*Créez votre mot de passe d'accès</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-lock"></i>
+                        <input type="password" id="reg_password" name="password" placeholder="Minimum 4 caractères" required>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="button-group">
+                <button type="reset" class="btn-reset"><i class="fa-solid fa-ban"></i> Annuler</button>
+                <button type="submit" class="btn-submit"><i class="fa-solid fa-user-plus"></i> Envoyer l'inscription</button>
+            </div>
+        </form>
+
+    </div>
+<script>
+        // L'adresse de votre serveur FastAPI (auth.py / main.py)
+        const API_URL = "http://127.0.0.1:8000"; 
+
+        const mainContainer = document.getElementById('mainContainer');
+        const errorBlock = document.getElementById('errorBlock');
+        const errorText = document.getElementById('errorText');
+
+        // Fonction pour basculer entre l'onglet Connexion et Inscription
+        function switchTab(mode) {
+            errorBlock.style.display = 'none';
+            document.getElementById('btnTabLogin').classList.remove('active');
+            document.getElementById('btnTabRegister').classList.remove('active');
+            document.getElementById('loginForm').classList.remove('active');
+            document.getElementById('registerForm').classList.remove('active');
+
+            if (mode === 'login') {
+                if(mainContainer) mainContainer.classList.remove('large');
+                document.getElementById('btnTabLogin').classList.add('active');
+                document.getElementById('loginForm').classList.add('active');
+                document.getElementById('pageSubtitle').innerText = "Connectez-vous pour accéder à votre espace";
+            } else {
+                if(mainContainer) mainContainer.classList.add('large');
+                document.getElementById('btnTabRegister').classList.add('active');
+                document.getElementById('registerForm').classList.add('active');
+                document.getElementById('pageSubtitle').innerText = "Les rubriques indiquées par * sont obligatoires.";
+            }
+        }
+
+        // Fonction pour afficher ou masquer le champ de saisie d'un autre pays
+        function toggleAutrePays(show) {
+            const autreInput = document.getElementById('autre_pays_input');
+            if(autreInput) {
+                autreInput.style.display = show ? 'block' : 'none';
+                if (show) autreInput.setAttribute('required', 'true');
+                else autreInput.removeAttribute('required');
+            }
+        }
+
+        // ================================================================
+        // GESTION DE LA CONNEXION
+        // ================================================================
+        async function gererConnexion(e) {
+            e.preventDefault();
+            errorBlock.style.display = 'none';
+
+            const usernameInput = document.getElementById('login_user');
+            const passwordInput = document.getElementById('login_pass');
+
+            const username = usernameInput ? usernameInput.value.trim() : "";
+            const pass = passwordInput ? passwordInput.value : "";
+
+            try {
+                console.log("Tentative de connexion pour :", username);
+
+                const response = await fetch(`${API_URL}/login`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ username: username, password: pass })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.detail || "Identifiants ou mot de passe incorrects.");
+                }
+
+                console.log("Connexion réussie serveur ! Prénom retourné :", data.prenom);
+
+                // Sauvegarde IMPORTANTE : On stocke le USERNAME pour l'assistant IA
+                localStorage.setItem('git_student_name', username);
+                localStorage.setItem('git_student_prenom', data.prenom || username);
+                
+                if (!localStorage.getItem('git_labs_completed')) {
+                    localStorage.setItem('git_labs_completed', JSON.stringify([]));
+                }
+
+                console.log("Redirection vers index.html...");
+                window.location.href = 'index.html';
+
+            } catch (error) {
+                console.error("Erreur de connexion :", error);
+                errorText.innerText = error.message;
+                errorBlock.style.display = 'flex';
+            }
+        }
+
+        // ================================================================
+        // GESTION DE L'INSCRIPTION
+        // ================================================================
+        async function gererInscription(e) {
+            e.preventDefault();
+            errorBlock.style.display = 'none';
+
+            const form = document.getElementById('registerForm');
+            const formData = new FormData(form);
+
+            const day = document.getElementById('birth_day').value.padStart(2, '0');
+            const month = document.getElementById('birth_month').value.padStart(2, '0');
+            const year = document.getElementById('birth_year').value;
+            const dateNaissance = `${year}-${month}-${day}`;
+
+            let paysSelectionne = formData.get('pays_radio');
+            if (paysSelectionne === 'Autre') {
+                paysSelectionne = document.getElementById('autre_pays_input').value.trim();
+            }
+
+            const password = document.getElementById('reg_password').value;
+            if (password.length < 4) {
+                errorText.innerText = "Le mot de passe doit faire au moins 4 caractères.";
+                errorBlock.style.display = 'flex';
+                return;
+            }
+
+            const username = formData.get('username').trim();
+            const prenom = formData.get('prenom').trim();
+
+            const payload = {
+                civilite: formData.get('civilite'),
+                username: username,
+                nom: formData.get('nom').trim(),
+                prenom: prenom,
+                date_naissance: dateNaissance,
+                nationalite: formData.get('nationalite').trim(),
+                adresse: formData.get('adresse').trim(),
+                code_postal: formData.get('code_postal').trim(),
+                ville: formData.get('ville').trim(),
+                pays: paysSelectionne,
+                telephone: formData.get('telephone').trim(),
+                email: formData.get('email').trim(),
+                niveau_profil: formData.get('niveau_profil'),
+                password: password
+            };
+
+            try {
+                console.log("Tentative d'inscription pour :", username);
+
+                const response = await fetch(`${API_URL}/register`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.detail || "Erreur lors de l'inscription.");
+                }
+
+                // Sauvegarde après inscription
+                localStorage.setItem('git_student_name', username);
+                localStorage.setItem('git_student_prenom', prenom);
+                if (!localStorage.getItem('git_labs_completed')) {
+                    localStorage.setItem('git_labs_completed', JSON.stringify([]));
+                }
+                
+                alert("Inscription réussie dans MySQL ! Bienvenue " + prenom);
+                window.location.href = 'index.html';
+
+            } catch (error) {
+                console.error("Erreur d'inscription :", error);
+                errorText.innerText = error.message;
+                errorBlock.style.display = 'flex';
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        // Vérification au chargement
+        window.onload = function() {
+            if (localStorage.getItem('git_student_name')) {
+                window.location.href = 'index.html';
+            }
+        }
+    </script>
+
+        
+</body>
+</html>

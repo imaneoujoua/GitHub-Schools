@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Commandes Avancées - GitHub Schools</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            background-color: #f4f7f6;
+            color: #333;
+            padding-bottom: 60px;
+        }
+
+        /* Barre de navigation supérieure */
+        nav {
+            background: #24292e;
+            color: white;
+            padding: 15px 0;
+            margin-bottom: 30px;
+        }
+
+        .nav-container {
+            width: 85%;
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .back-btn {
+            color: #cbd5e1;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+
+        .back-btn:hover {
+            color: white;
+        }
+
+        .container {
+            width: 85%;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: #24292e;
+            margin-bottom: 10px;
+        }
+
+        .description {
+            color: #64748b;
+            margin-bottom: 30px;
+        }
+
+        /* Onglets d'interaction */
+        .tabs {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 10px;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            font-size: 16px;
+            font-weight: 600;
+            color: #64748b;
+            cursor: pointer;
+            padding: 8px 16px;
+            transition: all 0.2s;
+        }
+
+        .tab-btn.active {
+            color: #c5221f; /* Rouge Avancé */
+            border-bottom: 3px solid #c5221f;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Titres des sous-sections de commandes */
+        .section-title {
+            margin: 25px 0 15px 0;
+            color: #c5221f;
+            font-size: 20px;
+            border-bottom: 1px solid #cbd5e1;
+            padding-bottom: 5px;
+        }
+
+        /* Styles du groupe de commandes */
+        .command-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            border-left: 5px solid #c5221f;
+        }
+
+        .command-card h3 {
+            font-size: 18px;
+            margin-bottom: 8px;
+            color: #24292e;
+        }
+
+        .command-card p {
+            font-size: 14px;
+            color: #64748b;
+            margin-bottom: 12px;
+        }
+
+        .code-box {
+            background: #1e293b;
+            color: #f8fafc;
+            padding: 12px 15px;
+            border-radius: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        .copy-btn {
+            background: #334155;
+            color: #cbd5e1;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: background 0.2s;
+        }
+
+        .copy-btn:hover {
+            background: #475569;
+            color: white;
+        }
+
+        /* Styles de la zone d'Exercices */
+        .quiz-container {
+            background: white;
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        .question {
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px dashed #e2e8f0;
+        }
+
+        .question p {
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #24292e;
+        }
+
+        .options-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option-item {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .option-item:hover {
+            background: #f1f5f9;
+        }
+
+        /* Classes dynamiques pour la correction */
+        .correct {
+            background-color: #d1e7dd !important;
+            border-color: #a3cfbb !important;
+            color: #0f5132;
+            font-weight: 600;
+        }
+
+        .incorrect {
+            background-color: #f8d7da !important;
+            border-color: #f5c2c7 !important;
+            color: #842029;
+        }
+
+        .score-box {
+            margin-top: 20px;
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+            color: #24292e;
+            background: #fce8e6;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #f5c2c7;
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="nav-container">
+            <a href="index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Retour à l'accueil</a>
+            <div><strong>Niveau : Avancé</strong></div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1>🔥 Commandes Avancées & Nettoyage</h1>
+        <p class="description">Maîtrisez la réécriture d'historique, l'annulation d'erreurs, le masquage de modifications et le marquage des versions de production.</p>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('lecon')"><i class="fa-solid fa-book"></i> Pense-bête Expert</button>
+            <button class="tab-btn" onclick="switchTab('pratique')"><i class="fa-solid fa-pen-clip"></i> Exercices Pratiques</button>
+        </div>
+
+        <div id="tab-lecon" class="tab-content active">
+            
+            <div class="section-title"><i class="fa-solid fa-clock-rotate-left"></i> A. Annulations, Modifications de Commits & Reset</div>
+
+            <div class="command-card">
+                <h3>1. Modifier le tout dernier commit</h3>
+                <p>Permet d'ajouter des fichiers oubliés ou de corriger le message textuel du dernier commit sans en créer un nouveau.</p>
+                <div class="code-box">
+                    <code id="cmd_amend">git commit --amend -m "Nouveau message corrigé"</code>
+                    <button class="copy-btn" onclick="copierCode('cmd_amend')"><i class="fa-regular fa-copy"></i> Copier</button>
+                </div>
+            </div>
+
+            <div class="command-card">
+                <h3>2. Annuler des commits en gardant les fichiers (Soft Reset)</h3>
+                <p>Recule l'historique d'un commit en arrière. Vos modifications restent présentes et prêtes dans la zone de staging.</p>
+                <div class="code-box">
+                    <code id="cmd_reset_soft">git reset --soft HEAD~1</code>
+                    <button class="copy-btn" onclick="copierCode('cmd_reset_soft')"><i class="fa-regular fa-copy"></i> Copier</button>
+                </div>
+            </div>
+
+            <div class="command-card">
+                <h3>3. Annuler TOUT et effacer les changements (Hard Reset)</h3>
+                <p>⚠️ <strong>Attention :</strong> Recule l'historique et efface définitivement toutes vos modifications locales non enregistrées.</p>
+                <div class="code-box">
+                    <code id="cmd_reset_hard">git reset --hard HEAD~1</code>
+                    <button class="copy-btn" onclick="copierCode('cmd_reset_hard')"><i class="fa-regular fa-copy"></i> Copier</button>
+                </div>
+            </div>
+
+            <div class="command-card">
+                <h3>4. Annuler proprement via un nouveau commit (Revert)</h3>
+                <p>Crée un nouveau commit qui fait exactement l'inverse du commit ciblé (idéal et sécurisé pour le travail en équipe).</p>
+                <div class="code-box">
+                    <code id="cmd_revert">git revert <code-sha1-du-commit></code>
+                    <button class="copy-btn" onclick="copierCode('cmd_revert')"><i class="fa-regular fa-copy"></i> Copier</button>
+                </div>
+            </div>
+
+
+            <div class="section-title"><i class="fa-solid fa-boxes-stacked"></i> B. Remisage Temporaire (Stash) & Rebase</div>
+
+            <div class="command-card">
+                <h3>5. Masquer et mettre de côté son travail</h3>
+                <p>Sauvegarde temporairement vos fichiers modifiés dans une boîte cachée pour nettoyer votre dossier sans faire de commit.</p>
+                <div class="code-box">
+                    <code id="cmd_stash">git stash</code>
+                    <button class="copy-btn" onclick="copierCode('cmd_stash')"><i class="fa-regular fa-copy"></i> Copier</button>
+                </div>
+            </div>
+
+            <div class="command-card">
+                <h3>6. Récupérer son travail masqué</h3>
+                <p>Restaure et réapplique les modifications précédemment mises de côté avec la commande stash.</p>
+                <div class="code-box">
+                    <code id="cmd_stash_pop">git stash pop</code>
+                    <button class="copy-btn" onclick="copierCode('cmd_stash_pop')"><i class="fa-regular fa-copy"></i> Copier</button>
+                </div>
+            </div>
+
+            <div class="command-card">
+                <h3>7. Réécrire l'historique des branches (Rebase)</h3>
+                <p>Déplace la base de votre branche actuelle pour la caler proprement juste après les tout derniers commits du <code>main</code>.</p>
+                <div class="code-box">
+                    <code id="cmd_rebase">git rebase main</code>
+                    <button class="copy-btn" onclick="copierCode('cmd_rebase')"><i class="fa-regular fa-copy"></i> Copier</button>
+                </div>
+            </div>
+
+
+            <div class="section-title"><i class="fa-solid fa-tag"></i> C. Gestion des Versions Importantes (Tags)</div>
+
+            <div class="command-card">
+                <h3>8. Créer un Tag de version</h3>
+                <p>Pose un jalon permanent sur un commit pour marquer une étape majeure (ex: livraison finale de la version v1.0.0).</p>
+                <div class="code-box">
+                    <code id="cmd_tag">git tag -a v1.0.0 -m "Version stable 1.0.0"</code>
+                    <button class="copy-btn" onclick="copierCode('cmd_tag')"><i class="fa-regular fa-copy"></i> Copier</button>
+                </div>
+            </div>
+
+            <div class="command-card">
+                <h3>9. Pousser les Tags vers GitHub</h3>
+                <p>Les tags ne sont pas envoyés automatiquement. Cette commande force la synchronisation de vos repères de version sur GitHub.</p>
+                <div class="code-box">
+                    <code id="cmd_push_tags">git push origin --tags</code>
+                    <button class="copy-btn" onclick="copierCode('cmd_push_tags')"><i class="fa-regular fa-copy"></i> Copier</button>
+                </div>
+            </div>
+
+        </div>
+
+        <div id="tab-pratique" class="tab-content">
+            <div class="quiz-container">
+                <h2>Évaluation Expert</h2>
+                <p style="color: #64748b; margin-bottom: 20px;">Validez vos compétences sur les situations complexes de Git.</p>
+
+                <div class="question">
+                    <p>1. Quelle option de "git reset" efface définitivement tous les changements locaux ?</p>
+                    <ul class="options-list">
+                        <li class="option-item" onclick="verifierReponse(this, false)">--soft</li>
+                        <li class="option-item" onclick="verifierReponse(this, true)">--hard</li>
+                        <li class="option-item" onclick="verifierReponse(this, false)">--clean</li>
+                    </ul>
+                </div>
+
+                <div class="question">
+                    <p>2. Vous devez changer de branche en urgence mais votre code actuel n'est pas fini, que faites-vous ?</p>
+                    <ul class="options-list">
+                        <li class="option-item" onclick="verifierReponse(this, true)">J'utilise "git stash" pour le mettre de côté en sécurité</li>
+                        <li class="option-item" onclick="verifierReponse(this, false)">Je supprime mes fichiers pour aller plus vite</li>
+                        <li class="option-item" onclick="verifierReponse(this, false)">Je fais un "git push --force"</li>
+                    </ul>
+                </div>
+
+                <div class="question">
+                    <p>3. Comment modifier le message textuel du tout dernier commit local effectué ?</p>
+                    <ul class="options-list">
+                        <li class="option-item" onclick="verifierReponse(this, false)">git commit --change</li>
+                        <li class="option-item" onclick="verifierReponse(this, false)">git reset --message</li>
+                        <li class="option-item" onclick="verifierReponse(this, true)">git commit --amend</li>
+                    </ul>
+                </div>
+
+                <div class="question">
+                    <p>4. Quel outil permet de poser un repère nommé (ex: v1.0) sur l'historique stable de production ?</p>
+                    <ul class="options-list">
+                        <li class="option-item" onclick="verifierReponse(this, true)">git tag</li>
+                        <li class="option-item" onclick="verifierReponse(this, false)">git bookmark</li>
+                        <li class="option-item" onclick="verifierReponse(this, false)">git branch -version</li>
+                    </ul>
+                </div>
+
+                <div class="score-box" id="score-display">Votre Score : 0 / 4</div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function copierCode(id) {
+            var texte = document.getElementById(id).innerText;
+            navigator.clipboard.writeText(texte).then(() => {
+                alert("Copié dans le presse-papiers : " + texte);
+            });
+        }
+
+        function switchTab(onglet) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            if(onglet === 'lecon') {
+                document.querySelector('.tabs button:nth-child(1)').classList.add('active');
+                document.getElementById('tab-lecon').classList.add('active');
+            } else {
+                document.querySelector('.tabs button:nth-child(2)').classList.add('active');
+                document.getElementById('tab-pratique').classList.add('active');
+            }
+        }
+
+        let score = 0;
+        let totalQuestions = 4;
+        
+        function verifierReponse(element, estCorrect) {
+            const parentUl = element.parentElement;
+            if(parentUl.classList.contains('deja-repondu')) return;
+            
+            parentUl.classList.add('deja-repondu');
+
+            if(estCorrect) {
+                element.classList.add('correct');
+                score++;
+            } else {
+                element.classList.add('incorrect');
+                Array.from(parentUl.children).forEach(li => {
+                    if(li.getAttribute('onclick').includes('true')) {
+                        li.classList.add('correct');
+                    }
+                });
+            }
+            
+            document.getElementById('score-display').innerText = `Votre Score : ${score} / ${totalQuestions}`;
+        }
+    </script>
+</body>
+</html>

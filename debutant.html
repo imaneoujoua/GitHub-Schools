@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Commandes Débutant - GitHub Schools</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            background-color: #f4f7f6;
+            color: #333;
+            padding-bottom: 60px;
+        }
+
+        /* Barre de navigation supérieure */
+        nav {
+            background: #24292e;
+            color: white;
+            padding: 15px 0;
+            margin-bottom: 30px;
+        }
+
+        .nav-container {
+            width: 85%;
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .back-btn {
+            color: #cbd5e1;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+
+        .back-btn:hover {
+            color: white;
+        }
+
+        .container {
+            width: 85%;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: #24292e;
+            margin-bottom: 10px;
+        }
+
+        .description {
+            color: #64748b;
+            margin-bottom: 30px;
+        }
+
+        /* Onglets d'interaction */
+        .tabs {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 10px;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            font-size: 16px;
+            font-weight: 600;
+            color: #64748b;
+            cursor: pointer;
+            padding: 8px 16px;
+            transition: all 0.2s;
+        }
+
+        .tab-btn.active {
+            color: #137333; /* Vert Débutant */
+            border-bottom: 3px solid #137333;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Titres des sous-sections de commandes */
+        .section-title {
+            margin: 25px 0 15px 0;
+            color: #137333;
+            font-size: 20px;
+            border-bottom: 1px solid #cbd5e1;
+            padding-bottom: 5px;
+        }
+
+        /* Styles du groupe de commandes */
+        .command-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            border-left: 5px solid #137333;
+        }
+
+        .command-card h3 {
+            font-size: 18px;
+            margin-bottom: 8px;
+            color: #24292e;
+        }
+
+        .command-card p {
+            font-size: 14px;
+            color: #64748b;
+            margin-bottom: 12px;
+        }
+
+        .code-box {
+            background: #1e293b;
+            color: #f8fafc;
+            padding: 12px 15px;
+            border-radius: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        .copy-btn {
+            background: #334155;
+            color: #cbd5e1;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: background 0.2s;
+        }
+
+        .copy-btn:hover {
+            background: #475569;
+            color: white;
+        }
+
+        /* Styles de la zone d'Exercices */
+        .quiz-container {
+            background: white;
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        .question {
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px dashed #e2e8f0;
+        }
+
+        .question p {
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #24292e;
+        }
+
+        .options-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option-item {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .option-item:hover {
+            background: #f1f5f9;
+        }
+
+        /* Classes dynamiques pour la correction */
+        .correct {
+            background-color: #d1e7dd !important;
+            border-color: #a3cfbb !important;
+            color: #0f5132;
+            font-weight: 600;
+        }
+
+        .incorrect {
+            background-color: #f8d7da !important;
+            border-color: #f5c2c7 !important;
+            color: #842029;
+        }
+
+        .score-box {
+            margin-top: 20px;
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+            color: #24292e;
+            background: #e8f0fe;
+            padding: 15px;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="nav-container">
+            <a href="index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Retour à l'accueil</a>
+            <div><strong>Niveau : Débutant</strong></div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1>🌱 Guide Complet des Commandes de Base</h1>
+        <p class="description">Retrouvez toutes les commandes indispensables pour configurer Git, démarrer un projet et gérer l'historique de vos fichiers.</p>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('lecon')"><i class="fa-solid fa-book"></i> Pense-bête (Dictionnaire complet)</button>
+            <button class="tab-btn" onclick="switchTab('pratique')"><i class="fa-solid fa-pen-clip"></i> Exercices Pratiques</button>
+        </div>
+
+        <div id="tab-lecon" class="tab-content active">
+            
+            <div class="section-title"><i class="fa-solid fa-gear"></i> A. Configuration Initiale de l'Identité</div>
+
+            <div class="command-card">
+                <h3>1. Configurer le Nom d'utilisateur</h3>
+                <p>Définit le nom qui sera associé de manière permanente à chacun de vos enregistrements (commits).</p>
+                <div class="code-box">
+                    <code id="cmd_name">git config --global user.name "VotreNom"</code>
+                    <button class="copy-btn" onclick="copierCode('cmd_name')"><i class="fa-regular fa-copy"></i> Copier</button>
+                </div>
+            </div>
+
+            <div class="command-card">
+                <h3>2. Configurer l'Adresse E-mail</h3>
+                <p>Associe votre adresse e-mail à vos modifications. C'est l'identifiant obligatoire utilisé par GitHub.</p>
+                <div class="code-box">
+                    <code id="cmd_email">git config --global user.email "votre@email.com"</code>
+                    <button class="copy-btn" onclick="copierCode('cmd_email')"><i class="fa-regular fa-copy"></i> Copier</button>
+                </div>
+            </div>
+
+            <div class="command-card">
+                <h3>3. Configurer la Branche par Défaut</h3>
+                <p>Force Git à nommer la branche principale <code>main</code> au lieu de l'ancien nom par défaut <code>master</code>.</p>
+                <div class="code-box">
+                    <code id="cmd_branch">git config --global init.defaultBranch main</code>
+                    <button class="copy-btn" onclick="copierCode('cmd_branch')"><i class="fa-regular fa-copy"></i> Copier</button>
+                </div>
+            </div>
+
+            <div class="command-card">
+                <h3>4. Vérifier les Paramètres</h3>
+                <p>Affiche la liste complète de toutes les configurations actives sur votre environnement informatique.</p>
+                <div class="code-box">
+                    <code id="cmd_list">git config --list</code>
+                    <button class="copy-btn" onclick="copierCode('cmd_list')"><i class="fa-regular fa-copy"></i> Copier</button>
+                </div>
+            </div>
+
+
+            <div class="section-title"><i class="fa-solid fa-folder-plus"></i> B. Création et Clonage de Dépôts</div>
+
+            <div class="command-card">
+                <h3>5. Initialiser un Dépôt</h3>
+                <p>Crée un nouveau dépôt Git local vide. Cela génère le dossier masqué invisible <code>.git</code> à la racine du projet.</p>
+                <div class="code-box">
+                    <code id="cmd_init">git init</code>
+                    <button class="copy-btn" onclick="copierCode('cmd_init')"><i class="fa-regular fa-copy"></i> Copier</button>
+                </div>
+            </div>
+
+            <div class="command-card">
+                <h3>6. Cloner un Projet Existant</h3>
+                <p>Télécharge une copie complète d'un dépôt déjà existant sur GitHub directement sur votre ordinateur.</p>
+                <div class="code-box">
+                    <code id="cmd_clone">git clone https://github.com/utilisateur/depot.git</code>
+                    <button class="copy-btn" onclick="copierCode('cmd_clone')"><i class="fa-regular fa-copy"></i> Copier</button>
+                </div>
+            </div>
+
+
+            <div class="section-title"><i class="fa-solid fa-rotate"></i> C. Le Cycle de Suivi et d'Enregistrement (Workflow)</div>
+
+            <div class="command-card">
+                <h3>7. Vérifier le Statut des Fichiers</h3>
+                <p>Indique avec précision quels fichiers sont modifiés, lesquels attendent d'être enregistrés (Staging area), et lesquels ne sont pas encore suivis.</p>
+                <div class="code-box">
+                    <code id="cmd_status">git status</code>
+                    <button class="copy-btn" onclick="copierCode('cmd_status')"><i class="fa-regular fa-copy"></i> Copier</button>
+                </div>
+            </div>
+
+            <div class="command-card">
+                <h3>8. Ajouter un Fichier Spécifique</h3>
+                <p>Ajoute un seul fichier ciblé à la zone de préparation (Staging Area) avant l'enregistrement.</p>
+                <div class="code-box">
+                    <code id="cmd_add_file">git add mon_fichier.txt</code>
+                    <button class="copy-btn" onclick="copierCode('cmd_add_file')"><i class="fa-regular fa-copy"></i> Copier</button>
+                </div>
+            </div>
+
+            <div class="command-card">
+                <h3>9. Ajouter TOUS les Changements</h3>
+                <p>Envoie l'intégralité des fichiers créés ou modifiés du dossier de travail vers l'index de préparation.</p>
+                <div class="code-box">
+                    <code id="cmd_add_all">git add .</code>
+                    <button class="copy-btn" onclick="copierCode('cmd_add_all')"><i class="fa-regular fa-copy"></i> Copier</button>
+                </div>
+            </div>
+
+            <div class="command-card">
+                <h3>10. Enregistrer l'Instantané (Commit)</h3>
+                <p>Sauvegarde définitivement la version des fichiers dans votre historique Git local avec un texte d'explication.</p>
+                <div class="code-box">
+                    <code id="cmd_commit">git commit -m "Ajout de la structure de base"</code>
+                    <button class="copy-btn" onclick="copierCode('cmd_commit')"><i class="fa-regular fa-copy"></i> Copier</button>
+                </div>
+            </div>
+
+            <div class="command-card">
+                <h3>11. Consulter l'Historique</h3>
+                <p>Affiche la liste chronologique complète de tous les commits validés sur le projet (avec auteurs, dates et codes SHA-1).</p>
+                <div class="code-box">
+                    <code id="cmd_log">git log</code>
+                    <button class="copy-btn" onclick="copierCode('cmd_log')"><i class="fa-regular fa-copy"></i> Copier</button>
+                </div>
+            </div>
+
+        </div>
+
+        <div id="tab-pratique" class="tab-content">
+            <div class="quiz-container">
+                <h2>Testez vos compétences Débutant !</h2>
+                <p style="color: #64748b; margin-bottom: 20px;">Répondez aux questions suivantes pour voir si vous maîtrisez les bases.</p>
+
+                <div class="question">
+                    <p>1. Quelle commande permet d'initialiser un projet Git dans le dossier courant ?</p>
+                    <ul class="options-list">
+                        <li class="option-item" onclick="verifierReponse(this, false)">git start</li>
+                        <li class="option-item" onclick="verifierReponse(this, true)">git init</li>
+                        <li class="option-item" onclick="verifierReponse(this, false)">git setup</li>
+                    </ul>
+                </div>
+
+                <div class="question">
+                    <p>2. Comment ajouter tous les fichiers modifiés d'un coup à la zone de Staging ?</p>
+                    <ul class="options-list">
+                        <li class="option-item" onclick="verifierReponse(this, false)">git add -all</li>
+                        <li class="option-item" onclick="verifierReponse(this, true)">git add .</li>
+                        <li class="option-item" onclick="verifierReponse(this, false)">git commit --all</li>
+                    </ul>
+                </div>
+
+                <div class="question">
+                    <p>3. Quel est le rôle de la commande "git log" ?</p>
+                    <ul class="options-list">
+                        <li class="option-item" onclick="verifierReponse(this, true)">Voir l'historique complet des commits passés</li>
+                        <li class="option-item" onclick="verifierReponse(this, false)">Se connecter à son compte en écrivant un identifiant</li>
+                        <li class="option-item" onclick="verifierReponse(this, false)">Supprimer les erreurs commises dans le code</li>
+                    </ul>
+                </div>
+
+                <div class="question">
+                    <p>4. Quelle commande permet de lister toutes les configurations actives de son profil ?</p>
+                    <ul class="options-list">
+                        <li class="option-item" onclick="verifierReponse(this, false)">git config --show</li>
+                        <li class="option-item" onclick="verifierReponse(this, false)">git status --list</li>
+                        <li class="option-item" onclick="verifierReponse(this, true)">git config --list</li>
+                    </ul>
+                </div>
+
+                <div class="score-box" id="score-display">Votre Score : 0 / 4</div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // 1. Fonction pour copier le code
+        function copierCode(id) {
+            var texte = document.getElementById(id).innerText;
+            navigator.clipboard.writeText(texte).then(() => {
+                alert("Copié dans le presse-papiers : " + texte);
+            });
+        }
+
+        // 2. Fonction pour changer d'onglet
+        function switchTab(onglet) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            if(onglet === 'lecon') {
+                document.querySelector('.tabs button:nth-child(1)').classList.add('active');
+                document.getElementById('tab-lecon').classList.add('active');
+            } else {
+                document.querySelector('.tabs button:nth-child(2)').classList.add('active');
+                document.getElementById('tab-pratique').classList.add('active');
+            }
+        }
+
+        // 3. Logique du Quiz interactif réutilisable
+        let score = 0;
+        let totalQuestions = 4;
+        
+        function verifierReponse(element, estCorrect) {
+            const parentUl = element.parentElement;
+            if(parentUl.classList.contains('deja-repondu')) return;
+            
+            parentUl.classList.add('deja-repondu');
+
+            if(estCorrect) {
+                element.classList.add('correct');
+                score++;
+            } else {
+                element.classList.add('incorrect');
+                // Met en évidence la bonne réponse pour guider l'élève
+                Array.from(parentUl.children).forEach(li => {
+                    if(li.getAttribute('onclick').includes('true')) {
+                        li.classList.add('correct');
+                    }
+                });
+            }
+            
+            document.getElementById('score-display').innerText = `Votre Score : ${score} / ${totalQuestions}`;
+        }
+    </script>
+</body>
+</html>

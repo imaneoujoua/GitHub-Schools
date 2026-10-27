@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon Espace Dynamique & Certifications - GitHub Schools</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* -------------------------------------
+           RESET & PARAMÈTRES GENERAUX
+        ------------------------------------- */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
+        body { background-color: #f8fafc; color: #1e293b; padding-bottom: 60px; }
+        
+        /* Barre de navigation */
+        nav { background: #24292e; color: white; padding: 15px 0; margin-bottom: 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .nav-container { width: 90%; max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        .back-btn { color: #cbd5e1; text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 8px; transition: color 0.2s; }
+        .back-btn:hover { color: #38bdf8; }
+        
+        /* Style du bouton Mon Livre */
+        .book-btn { background: #0284c7; color: white; text-decoration: none; padding: 8px 16px; border-radius: 6px; font-weight: 600; display: flex; align-items: center; gap: 8px; transition: background 0.2s; }
+        .book-btn:hover { background: #0369a1; }
+
+        .container { width: 90%; max-width: 1200px; margin: 0 auto; }
+        
+        /* -------------------------------------
+           EN-TÊTE DU PROFIL PRO
+        ------------------------------------- */
+        .profile-header { 
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%); 
+            color: white; 
+            border-radius: 16px; 
+            padding: 35px; 
+            margin-bottom: 30px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            box-shadow: 0 10px 25px rgba(30, 41, 59, 0.1);
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .profile-info { display: flex; align-items: center; gap: 20px; }
+        
+        .profile-avatar { 
+            width: 85px; 
+            height: 85px; 
+            background: linear-gradient(135deg, #38bdf8 0%, #0284c7 100%); 
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: 32px; 
+            font-weight: 700;
+            border: 4px solid rgba(255, 255, 255, 0.2); 
+            color: white; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+        .profile-text h2 { font-size: 26px; font-weight: 700; letter-spacing: -0.5px; margin-bottom: 4px; }
+        .profile-text p { font-size: 14px; color: #94a3b8; display: flex; align-items: center; gap: 6px; }
+
+        /* Actions de l'en-tête (Livre + Déconnexion) */
+        .header-actions { display: flex; gap: 12px; align-items: center; }
+
+        /* -------------------------------------
+           GRILLE PRINCIPALE (STYLE DASHBOARD)
+        ------------------------------------- */
+        .dashboard-grid { display: grid; grid-template-columns: 1.6fr 1.1fr; gap: 30px; }
+        @media (max-width: 992px) { .dashboard-grid { grid-template-columns: 1fr; } }
+        
+        /* Structure des Cartes */
+        .card { background: white; border: 1px solid #e2e8f0; border-radius: 16px; padding: 25px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); margin-bottom: 25px; transition: transform 0.2s, box-shadow 0.2s; }
+        .card:hover { box-shadow: 0 10px 20px rgba(0,0,0,0.04); }
+        .card-title { font-size: 18px; font-weight: 600; margin-bottom: 20px; color: #0f172a; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #f1f5f9; padding-bottom: 12px; }
+        
+        /* Mini statistiques d'activité */
+        .mini-stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 25px; }
+        .mini-stat-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 15px; text-align: center; }
+        .mini-stat-num { font-size: 20px; font-weight: 700; color: #0f172a; }
+        .mini-stat-label { font-size: 12px; color: #64748b; margin-top: 2px; }
+
+        /* Progression */
+        .progress-group { margin-bottom: 10px; }
+        .progress-labels { display: flex; justify-content: space-between; font-size: 14px; font-weight: 600; margin-bottom: 10px; }
+        .progress-bar-bg { background: #e2e8f0; border-radius: 9999px; height: 14px; overflow: hidden; box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); }
+        .progress-bar-fill { background: linear-gradient(90deg, #38bdf8 0%, #0ea5e9 100%); height: 100%; border-radius: 9999px; width: 0%; transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1); }
+        
+        /* Badges de Trophées */
+        .badge-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
+        .badge-item { background: #f1f5f9; color: #94a3b8; padding: 12px; border-radius: 12px; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 10px; border: 1px solid #e2e8f0; transition: all 0.3s; }
+        .badge-item i { font-size: 16px; background: #cbd5e1; color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        .badge-unlocked { background: #f0fdf4; color: #15803d; border-color: #bbf7d0; box-shadow: 0 4px 10px rgba(22, 163, 74, 0.08); }
+        .badge-unlocked i { background: #10b981; color: white; }
+        
+        /* Formulaires & Configurations */
+        .form-group { margin-bottom: 18px; }
+        label { display: block; font-size: 13px; font-weight: 600; color: #475569; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .input-group { position: relative; display: flex; align-items: center; }
+        .input-group i { position: absolute; left: 12px; color: #94a3b8; font-size: 14px; }
+        .input-field { width: 100%; padding: 11px 11px 11px 38px; border: 1px solid #cbd5e1; border-radius: 8px; outline: none; font-size: 14px; transition: all 0.2s; color: #1e293b; }
+        .input-field:focus { border-color: #0ea5e9; box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.15); }
+        .select-field { width: 100%; padding: 11px; border: 1px solid #cbd5e1; border-radius: 8px; outline: none; font-size: 14px; background-color: white; color: #1e293b; }
+        
+        /* Boutons */
+        .btn { padding: 12px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; border: none; font-size: 14px; transition: all 0.2s; justify-content: center; }
+        .btn-primary { background: #0ea5e9; color: white; width: 100%; box-shadow: 0 4px 12px rgba(14, 165, 233, 0.2); }
+        .btn-primary:hover { background: #0284c7; transform: translateY(-1px); }
+        .btn-danger { padding: 12px 16px; background: #ef4444; color: white; box-shadow: 0 4px 12px rgba(239, 68, 68, 0.15); }
+        .btn-danger:hover { background: #dc2626; }
+        
+        /* -------------------------------------
+           BLOC DE CERTIFICATION PROFESSIONNEL
+        ------------------------------------- */
+        .certif-box { background: #faf5ff; border: 2px dashed #a855f7; border-radius: 12px; padding: 25px; text-align: center; }
+        .certif-btn { background: #a855f7; color: white; border: none; padding: 14px 24px; border-radius: 8px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 10px; width: 100%; justify-content: center; box-shadow: 0 4px 14px rgba(168, 85, 247, 0.3); transition: all 0.2s; font-size: 15px; }
+        .certif-btn:hover { background: #9333ea; transform: translateY(-1px); }
+        .certif-btn:disabled { background: #e2e8f0; color: #94a3b8; border: 1px solid #cbd5e1; box-shadow: none; cursor: not-allowed; transform: none; }
+        .certif-status-msg { margin-top: 12px; font-size: 13px; font-weight: 600; color: #7c3aed; }
+        .certif-locked-msg { margin-top: 12px; font-size: 13px; font-weight: 600; color: #64748b; }
+
+        /* Switch iOS */
+        .switch-group { display: flex; justify-content: space-between; align-items: center; background: #f8fafc; padding: 14px; border-radius: 12px; border: 1px solid #e2e8f0; margin-top: 12px; }
+        .switch { position: relative; display: inline-block; width: 46px; height: 24px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #cbd5e1; transition: .3s; border-radius: 34px; }
+        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .3s; border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        input:checked + .slider { background-color: #10b981; }
+        input:checked + .slider:before { transform: translateX(22px); }
+
+        /* Moteur de recherche rapide */
+        .search-container { margin-top: 15px; position: relative; }
+        .search-box { width: 100%; padding: 11px 11px 11px 38px; border: 1px solid #e2e8f0; background: #f8fafc; border-radius: 8px; font-size: 13px; outline: none; }
+        .search-container i { position: absolute; left: 12px; top: 13px; color: #94a3b8; }
+        .command-result { background: #1e293b; color: #38bdf8; font-family: monospace; padding: 10px; border-radius: 6px; margin-top: 10px; font-size: 12px; display: none; border-left: 4px solid #0ea5e9; }
+
+        /* Bouton IA Copilot' */
+        .ai-btn-container { margin-top: 15px; border-top: 1px dashed #e2e8f0; padding-top: 15px; }
+        .btn-ai { background: linear-gradient(135deg, #8b5cf6 0%, #d946ef 100%); color: white; width: 100%; box-shadow: 0 4px 12px rgba(139, 92, 246, 0.25); }
+        .btn-ai:hover { background: linear-gradient(135deg, #7c3aed 0%, #c084fc 100%); transform: translateY(-1px); }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="nav-container">
+            <a href="index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Tableau de bord</a>
+            <div><strong>Mon Centre de Certification</strong></div>
+            <a href="mon_livre.html" class="book-btn"><i class="fa-solid fa-book"></i> Mon Livre</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        
+        <div class="profile-header">
+            <div class="profile-info">
+                <div class="profile-avatar" id="avatar-initials">--</div>
+                <div class="profile-text">
+                    <h2 id="student-name">Chargement...</h2>
+                    <p id="student-email"><i class="fa-regular fa-envelope"></i> Aucun e-mail configuré</p>
+                </div>
+            </div>
+            <div class="header-actions">
+                <a href="mon_livre.html" class="btn" style="background-color: #0ea5e9; color: white; text-decoration: none;">
+                    <i class="fa-solid fa-book"></i> Mon Livre
+                </a>
+                <button class="btn btn-danger" onclick="deconnexion()"><i class="fa-solid fa-power-off"></i> Déconnexion</button>
+            </div>
+        </div>
+
+        <div class="dashboard-grid">
+            
+            <div>
+                <div class="card">
+                    <div class="card-title"><i class="fa-solid fa-chart-line" style="color: #0ea5e9;"></i> Votre Progression Globale</div>
+                    
+                    <div class="mini-stats-grid">
+                        <div class="mini-stat-box">
+                            <div class="mini-stat-num" id="stat-time">0 min</div>
+                            <div class="mini-stat-label">Temps d'étude</div>
+                        </div>
+                        <div class="mini-stat-box">
+                            <div class="mini-stat-num" id="stat-level">Débutant</div>
+                            <div class="mini-stat-label">Niveau Actuel</div>
+                        </div>
+                        <div class="mini-stat-box">
+                            <div class="mini-stat-num" id="stat-commits">0</div>
+                            <div class="mini-stat-label">Commits terminés</div>
+                        </div>
+                    </div>
+
+                    <div class="progress-group">
+                        <div class="progress-labels">
+                            <span>Objectifs du Code Lab complétés</span>
+                            <span id="progress-text">0 / 7 Objectifs (0%)</span>
+                        </div>
+                        <div class="progress-bar-bg">
+                            <div id="progress-bar" class="progress-bar-fill"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title"><i class="fa-solid fa-trophy" style="color: #eab308;"></i> Trophées de compétences</div>
+                    <p style="font-size:13px; color:#64748b; margin-bottom:18px;">Valisez vos exercices pour illuminer vos badges.</p>
+                    
+                    <div class="badge-list">
+                        <div class="badge-item" id="badge-1"><i class="fa-solid fa-code-merge"></i> Anti-Conflit</div>
+                        <div class="badge-item" id="badge-2"><i class="fa-solid fa-boxes-stacked"></i> Pro du Stash</div>
+                        <div class="badge-item" id="badge-3"><i class="fa-solid fa-triangle-exclamation"></i> Expert Hard Reset</div>
+                        <div class="badge-item" id="badge-7"><i class="fa-solid fa-tag"></i> Maître des Tags</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title"><i class="fa-solid fa-bolt" style="color: #eab308;"></i> Quick Command Finder</div>
+                    <div class="search-container">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" id="cmd-search" class="search-box" placeholder="Tapez un mot-clé (ex: commit, branch, stash...)" oninput="rechercherCommande()">
+                    </div>
+                    <div id="search-result" class="command-result"></div>
+                    
+                    <div class="ai-btn-container">
+                        <button class="btn btn-ai" onclick="ouvrirAssistantIA()">
+                            <i class="fa-solid fa-robot"></i> Poser une question à l'IA Copilot'
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <div class="card">
+                    <div class="card-title"><i class="fa-solid fa-award" style="color: #a855f7;"></i> Certificat de Réussite</div>
+                    <p style="font-size: 13px; color: #64748b; margin-bottom: 18px; line-height: 1.5;">
+                        Une fois que vous aurez validé l'ensemble des **7 missions** du Code Lab, votre certificat officiel de fin d'études se débloquera automatiquement ci-dessous.
+                    </p>
+                    <div class="certif-box">
+                        <button id="btn-certif" class="certif-btn" onclick="telechargerCertificat()" disabled>
+                            <i class="fa-solid fa-file-pdf"></i> Télécharger mon Certificat
+                        </button>
+                        <div id="certif-msg" class="certif-locked-msg">
+                            <i class="fa-solid fa-lock"></i> Verrouillé (Progression insuffisante)
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title"><i class="fa-solid fa-user-gear" style="color: #475569;"></i> Configuration du Profil</div>
+                    
+                    <div class="form-group">
+                        <label>Nom de l'étudiant (affiché sur le certificat)</label>
+                        <div class="input-group">
+                            <i class="fa-solid fa-user"></i>
+                            <input type="text" id="input-name" class="input-field" placeholder="Ex: Jean Dupont">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Adresse E-mail</label>
+                        <div class="input-group">
+                            <i class="fa-solid fa-envelope"></i>
+                            <input type="email" id="input-email" class="input-field" placeholder="Ex: etudiant@ecole.com">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Niveau déclaré</label>
+                        <select id="input-level" class="select-field" onchange="changerNiveauGraphique()">
+                            <option value="Débutant">Débutant (Bases de Git)</option>
+                            <option value="Intermédiaire">Intermédiaire (Branches & Fusion)</option>
+                            <option value="Avancé">Avancé (Expert GitHub)</option>
+                        </select>
+                    </div>
+
+                    <button class="btn btn-primary" onclick="sauvegarderConfiguration()">
+                        <i class="fa-solid fa-floppy-disk"></i> Enregistrer les modifications
+                    </button>
+                </div>
+
+                <div class="card">
+                    <div class="card-title"><i class="fa-solid fa-bell" style="color: #f59e0b;"></i> Rappels d'étude quotidiens</div>
+                    <div class="switch-group">
+                        <div>
+                            <strong style="font-size: 14px; display:block; color:#0f172a;">Alertes journalières</strong>
+                            <span style="font-size:11px; color:#94a3b8;">Notification de session active</span>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="reminder-switch" onchange="clicToggleRappels()">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    <script>
+        const baseCommandes = {
+            init: "git init : Initialise un nouveau dépôt Git local dans le dossier courant.",
+            status: "git status : Inspecte l'état du répertoire pour voir les fichiers indexés/non-suivis.",
+            commit: "git commit -m \"Message\" : Enregistre définitivement l'index dans l'historique.",
+            branch: "git branch <nom> : Permet de diviser votre ligne de développement pour travailler en sécurité.",
+            push: "git push origin <branche> : Téléverse toutes vos modifications locales sur le serveur GitHub.",
+            stash: "git stash : Met de côté temporairement votre travail en cours non validé.",
+            log: "git log : Permet de lister et de relire l'historique de tous vos commits validés."
+        };
+
+        window.onload = function() {
+            const nomEtudiant = localStorage.getItem('git_student_name');
+            if(!nomEtudiant) {
+                window.location.href = 'connexion.html';
+                return;
+            }
+
+            document.getElementById('student-name').innerText = nomEtudiant;
+            document.getElementById('input-name').value = nomEtudiant;
+            
+            genererAvatarInitiale(nomEtudiant);
+
+            const emailEtudiant = localStorage.getItem('git_student_email') || "";
+            if(emailEtudiant !== "") {
+                document.getElementById('student-email').innerHTML = `<i class="fa-regular fa-envelope"></i> ${emailEtudiant}`;
+                document.getElementById('input-email').value = emailEtudiant;
+            }
+
+            const niveauStocke = localStorage.getItem('git_student_level') || "Débutant";
+            document.getElementById('input-level').value = niveauStocke;
+            document.getElementById('stat-level').innerText = niveauStocke;
+
+            const rappelActif = localStorage.getItem('git_reminders_enabled') === 'true';
+            document.getElementById('reminder-switch').checked = rappelActif;
+
+            // ANALYSE DE LA PROGRESSION
+            const missionsReussies = JSON.parse(localStorage.getItem('git_labs_completed')) || [];
+            const totalMissions = 7;
+            const pourcentage = Math.round((missionsReussies.length / totalMissions) * 100);
+
+            document.getElementById('progress-text').innerText = `${missionsReussies.length} / ${totalMissions} Objectifs (${pourcentage}%)`;
+            document.getElementById('progress-bar').style.width = pourcentage + '%';
+            
+            document.getElementById('stat-commits').innerText = 5 + (missionsReussies.length * 3);
+            document.getElementById('stat-time').innerText = (15 + (missionsReussies.length * 10)) + " min";
+
+            missionsReussies.forEach(numId => {
+                const badge = document.getElementById('badge-' + numId);
+                if(badge) badge.className = "badge-item badge-unlocked";
+            });
+
+            // 👑 CONDITION LOGIQUE DU DÉBLOCAGE DU CERTIFICAT
+            const boutonCertif = document.getElementById('btn-certif');
+            const messageCertif = document.getElementById('certif-msg');
+
+            if (missionsReussies.length >= totalMissions) {
+                boutonCertif.disabled = false;
+                messageCertif.className = "certif-status-msg";
+                messageCertif.innerHTML = `<i class="fa-solid fa-circle-check" style="color: #10b981;"></i> Félicitations ! Votre certificat est prêt !`;
+            } else {
+                boutonCertif.disabled = true;
+                messageCertif.className = "certif-locked-msg";
+                messageCertif.innerHTML = `<i class="fa-solid fa-lock"></i> Verrouillé (${missionsReussies.length}/${totalMissions} missions terminées)`;
+            }
+
+            if(rappelActif && missionsReussies.length < totalMissions) {
+                setTimeout(() => {
+                    alert(`📢 Rappel d'étude : Courage ${nomEtudiant} ! Terminez vos exercices pour débloquer votre Certificat de fin de formation ! 🏆`);
+                }, 600);
+            }
+        };
+
+        // ENGIN GENERATEUR DE CERTIFICAT
+        function telechargerCertificat() {
+            const nom = localStorage.getItem('git_student_name') || "Étudiant";
+            const niveau = localStorage.getItem('git_student_level') || "Débutant";
+            const dateAujourdhui = new Date().toLocaleDateString('fr-FR', {
+                year: 'numeric', month: 'long', day: 'numeric'
+            });
+
+            const certificatTexte = `======================================================================
+               CERTIFICAT DE RÉUSSITE OFFICIEL
+                       GITHUB SCHOOLS
+======================================================================
+
+Le présent document atteste solennellement que :
+
+                     ${nom.toUpperCase()}
+
+a suivi avec succès et validé l'intégralité du cursus pratique complet :
+     "FORMATION APPRENTISSAGE ET MAÎTRISE DE GIT & GITHUB LABS"
+
+Détails des compétences acquises et validées lors de l'examen :
+----------------------------------------------------------------------
+✓ Initialisation de dépôts & Workflow de Commit Local (git init, add)
+✓ Gestion des répertoires distants (Remotes GitHub & Identification)
+✓ Isolation de fonctionnalités (Modèle par Branches & Conflits Complexes)
+✓ Nettoyage et Restructuration d'Historique (Stash & Hard Reset)
+
+Niveau d'expertise atteint : [ ${niveau.toUpperCase()} ]
+Date de délivrance officielle : ${dateAujourdhui}
+
+======================================================================
+     Félicitations pour cette étape clé dans votre parcours Dev !
+           L'Équipe Pédagogique - GitHub Schools Lab
+======================================================================`;
+
+            const blob = new Blob([certificatTexte], { type: 'text/plain;charset=utf-8' });
+            const lien = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            lien.href = url;
+            lien.download = `Certificat_Git_${nom.replace(/ /g, "_")}.txt`;
+            document.body.appendChild(lien);
+            lien.click();
+            document.body.removeChild(lien);
+            URL.revokeObjectURL(url);
+        }
+
+        function genererAvatarInitiale(nom) {
+            const mots = nom.split(' ');
+            let initiales = mots[0].charAt(0).toUpperCase();
+            if(mots.length > 1) initiales += mots[1].charAt(0).toUpperCase();
+            else if (nom.length > 1) initiales += nom.charAt(1).toLowerCase();
+            document.getElementById('avatar-initials').innerText = initiales;
+        }
+
+        function changerNiveauGraphique() {
+            document.getElementById('stat-level').innerText = document.getElementById('input-level').value;
+        }
+
+        function sauvegarderConfiguration() {
+            const nouveauNom = document.getElementById('input-name').value.trim();
+            const nouvelEmail = document.getElementById('input-email').value.trim();
+            const nouveauNiveau = document.getElementById('input-level').value;
+
+            if(nouveauNom === "") {
+                alert("❌ Erreur : Le nom ne peut pas être vide.");
+                return;
+            }
+
+            localStorage.setItem('git_student_name', nouveauNom);
+            localStorage.setItem('git_student_email', nouvelEmail);
+            localStorage.setItem('git_student_level', nouveauNiveau);
+
+            document.getElementById('student-name').innerText = nouveauNom;
+            genererAvatarInitiale(nouveauNom);
+
+            if(nouvelEmail !== "") {
+                document.getElementById('student-email').innerHTML = `<i class="fa-regular fa-envelope"></i> ${nouvelEmail}`;
+            } else {
+                document.getElementById('student-email').innerHTML = `<i class="fa-regular fa-envelope"></i> Aucun e-mail configuré`;
+            }
+
+            alert("⚙️ Profil mis à jour ! Si vous téléchargez le certificat, vos nouvelles informations apparaîtront dessus.");
+        }
+
+        function clicToggleRappels() {
+            const isChecked = document.getElementById('reminder-switch').checked;
+            localStorage.setItem('git_reminders_enabled', isChecked);
+            alert(isChecked ? "🔔 Rappels d'études activés !" : "🔕 Rappels désactivés.");
+        }
+
+        function rechercherCommande() {
+            const requete = document.getElementById('cmd-search').value.toLowerCase().trim();
+            const boiteResultat = document.getElementById('search-result');
+            if(requete === "" || !baseCommandes[requete]) {
+                boiteResultat.style.display = "none";
+                return;
+            }
+            boiteResultat.innerText = baseCommandes[requete];
+            boiteResultat.style.display = "block";
+        }
+
+        function deconnexion() {
+            if(confirm("Voulez-vous vraiment vous déconnecter ?")) {
+                localStorage.removeItem('git_student_name');
+                window.location.href = 'connexion.html';
+            }
+        }
+
+        // Action lors du clic sur le bouton IA
+        function ouvrirAssistantIA() {
+           // Redirige vers la nouvelle page de l'assistant IA
+            window.location.href = 'assistant_ia.html';
+        }
+        
+    </script>
+</body>
+</html>

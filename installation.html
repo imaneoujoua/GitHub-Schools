@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Installation & Authentification - GitHub Schools</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            background-color: #f4f7f6;
+            color: #333;
+            padding-bottom: 60px;
+        }
+
+        nav {
+            background: #24292e;
+            color: white;
+            padding: 15px 0;
+            margin-bottom: 30px;
+        }
+
+        .nav-container {
+            width: 85%;
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .back-btn {
+            color: #cbd5e1;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+
+        .back-btn:hover {
+            color: white;
+        }
+
+        .container {
+            width: 85%;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: #24292e;
+            margin-bottom: 10px;
+        }
+
+        .description {
+            color: #64748b;
+            margin-bottom: 30px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 10px;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            font-size: 16px;
+            font-weight: 600;
+            color: #64748b;
+            cursor: pointer;
+            padding: 8px 16px;
+            transition: all 0.2s;
+        }
+
+        .tab-btn.active {
+            color: #1a73e8; /* Bleu Installation */
+            border-bottom: 3px solid #1a73e8;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .section-title {
+            margin: 30px 0 15px 0;
+            color: #1a73e8;
+            font-size: 20px;
+            border-bottom: 1px solid #cbd5e1;
+            padding-bottom: 5px;
+        }
+
+        /* Cartes de procédures d'installation */
+        .install-card {
+            background: white;
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            border-left: 5px solid #1a73e8;
+        }
+
+        .install-card h3 {
+            font-size: 18px;
+            margin-bottom: 12px;
+            color: #24292e;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .install-card ul, .install-card ol {
+            margin-left: 20px;
+            font-size: 14px;
+            color: #475569;
+            line-height: 1.6;
+        }
+
+        .install-card li {
+            margin-bottom: 8px;
+        }
+
+        .code-box {
+            background: #1e293b;
+            color: #f8fafc;
+            padding: 12px 15px;
+            border-radius: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: 'Courier New', Courier, monospace;
+            margin-top: 10px;
+        }
+
+        .copy-btn {
+            background: #334155;
+            color: #cbd5e1;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: background 0.2s;
+        }
+
+        .copy-btn:hover {
+            background: #475569;
+            color: white;
+        }
+
+        /* Quiz */
+        .quiz-container {
+            background: white;
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        .question {
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px dashed #e2e8f0;
+        }
+
+        .question p {
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #24292e;
+        }
+
+        .options-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option-item {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .option-item:hover {
+            background: #f1f5f9;
+        }
+
+        .correct {
+            background-color: #d1e7dd !important;
+            border-color: #a3cfbb !important;
+            color: #0f5132;
+            font-weight: 600;
+        }
+
+        .incorrect {
+            background-color: #f8d7da !important;
+            border-color: #f5c2c7 !important;
+            color: #842029;
+        }
+
+        .score-box {
+            margin-top: 20px;
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+            color: #24292e;
+            background: #e8f0fe;
+            padding: 15px;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="nav-container">
+            <a href="index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Retour à l'accueil</a>
+            <div><strong>Module : Environnement & Configuration</strong></div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1>⚙️ Guide d'Installation et Authentification</h1>
+        <p class="description">Installez Git sur votre machine de développement et configurez vos accès sécurisés (Token et clés SSH) pour communiquer avec GitHub.</p>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('lecon')"><i class="fa-solid fa-graduation-cap"></i> Guide d'Installation</button>
+            <button class="tab-btn" onclick="switchTab('pratique')"><i class="fa-solid fa-check-double"></i> Quiz de Validation</button>
+        </div>
+
+        <div id="tab-lecon" class="tab-content active">
+            
+            <div class="section-title"><i class="fa-solid fa-desktop"></i> 1. Installation de Git</div>
+
+            <div class="install-card">
+                <h3><i class="fa-brands fa-windows" style="color: #0078d4;"></i> Sur Windows</h3>
+                <ol>
+                    <li>Téléchargez l'installateur officiel sur <a href="https://git-scm.com/download/win" target="_blank" style="color:#1a73e8; text-decoration:underline;">git-scm.com</a>.</li>
+                    <li>Lancez le fichier exécutable <code>.exe</code> téléchargé.</li>
+                    <li>Suivez les étapes de l'assistant en laissant les options par défaut (notamment l'utilisation de <strong>Git Bash</strong> comme terminal recommandé).</li>
+                </ol>
+            </div>
+
+            <div class="install-card">
+                <h3><i class="fa-brands fa-linux" style="color: #333;"></i> Sur Linux (Ubuntu / Debian)</h3>
+                <p>Ouvrez votre terminal système et exécutez la commande suivante pour installer Git via le gestionnaire de paquets Advanced Package Tool :</p>
+                <div class="code-box">
+                    <code id="cmd_linux">sudo apt update && sudo apt install git -y</code>
+                    <button class="copy-btn" onclick="copierCode('cmd_linux')"><i class="fa-regular fa-copy"></i> Copier</button>
+                </div>
+            </div>
+
+            <div class="install-card">
+                <h3><i class="fa-brands fa-apple" style="color: #a3aaae;"></i> Sur macOS</h3>
+                <p>La méthode la plus simple consiste à utiliser le gestionnaire <strong>Homebrew</strong> dans votre terminal d'origine :</p>
+                <div class="code-box">
+                    <code id="cmd_mac">brew install git</code>
+                    <button class="copy-btn" onclick="copierCode('cmd_mac')"><i class="fa-regular fa-copy"></i> Copier</button>
+                </div>
+            </div>
+
+            <div class="install-card" style="border-left-color: #137333;">
+                <h3><i class="fa-solid fa-circle-check" style="color: #137333;"></i> Vérification de l'installation</h3>
+                <p>Pour vous assurer que Git est correctement installé et accessible globalement, ouvrez un terminal (ou Git Bash) et tapez :</p>
+                <div class="code-box">
+                    <code id="cmd_verif">git --version</code>
+                    <button class="copy-btn" onclick="copierCode('cmd_verif')"><i class="fa-regular fa-copy"></i> Copier</button>
+                </div>
+            </div>
+
+
+            <div class="section-title"><i class="fa-solid fa-key"></i> 2. Sécurisation et Authentification GitHub</div>
+
+            <div class="install-card">
+                <h3><i class="fa-solid fa-ticket"></i> Méthode 1 : Personal Access Token (Recommandée)</h3>
+                <ol>
+                    <li>Connectez-vous sur votre compte <strong>GitHub</strong>.</li>
+                    <li>Allez dans <strong>Settings</strong> &gt; <strong>Developer Settings</strong> &gt; <strong>Personal Access Tokens</strong> &gt; <strong>Tokens (classic)</strong>.</li>
+                    <li>Cliquez sur <em>Generate new token</em>, donnez-lui un nom, cochez la case <strong>"repo"</strong> (obligatoire pour gérer vos projets) et générez-le.</li>
+                    <li>⚠️ <strong>Copiez précieusement ce token</strong>, il ne s'affichera plus jamais !</li>
+                </ol>
+                <p style="margin-top:10px;"><strong>Sauvegarde permanente du Token sur votre PC :</strong> Pour éviter de retaper le token à chaque envoi de code, activez la mise en mémoire automatique :</p>
+                <div class="code-box">
+                    <code id="cmd_token_save">git config --global credential.helper store</code>
+                    <button class="copy-btn" onclick="copierCode('cmd_token_save')"><i class="fa-regular fa-copy"></i> Copier</button>
+                </div>
+            </div>
+
+            <div class="install-card">
+                <h3><i class="fa-solid fa-terminal"></i> Méthode 2 : Authentification par clé SSH (Avancée)</h3>
+                <p><strong>Étape A :</strong> Générez une nouvelle paire de clés de cryptage asymétrique RSA (remplacez par votre e-mail) :</p>
+                <div class="code-box">
+                    <code id="cmd_ssh_gen">ssh-keygen -t rsa -b 4096 -C "votre@email.com"</code>
+                    <button class="copy-btn" onclick="copierCode('cmd_ssh_gen')"><i class="fa-regular fa-copy"></i> Copier</button>
+                </div>
+                <p style="margin-top:15px;"><strong>Étape B :</strong> Affichez et copiez le contenu textuel complet de votre <strong>clé publique</strong> générée :</p>
+                <div class="code-box">
+                    <code id="cmd_ssh_cat">cat ~/.ssh/id_rsa.pub</code>
+                    <button class="copy-btn" onclick="copierCode('cmd_ssh_cat')"><i class="fa-regular fa-copy"></i> Copier</button>
+                </div>
+                <p style="margin-top:10px; font-size: 14px; color:#475569;">Allez ensuite sur GitHub dans <strong>Settings</strong> &gt; <strong>SSH and GPG keys</strong> &gt; <strong>New SSH Key</strong>, collez ce texte et validez.</p>
+            </div>
+
+        </div>
+
+        <div id="tab-pratique" class="tab-content">
+            <div class="quiz-container">
+                <h2>Validez votre Configuration</h2>
+                <p style="color: #64748b; margin-bottom: 20px;">Vérifiez vos connaissances sur la mise en place de l'environnement de développement.</p>
+
+                <div class="question">
+                    <p>1. Quelle commande permet de vérifier si Git fonctionne et de connaître sa version installée ?</p>
+                    <ul class="options-list">
+                        <li class="option-item" onclick="verifierReponse(this, false)">git check</li>
+                        <li class="option-item" onclick="verifierReponse(this, true)">git --version</li>
+                        <li class="option-item" onclick="verifierReponse(this, false)">git info</li>
+                    </ul>
+                </div>
+
+                <div class="question">
+                    <p>2. Quel privilège (scope) minimal doit impérativement posséder un Token sur GitHub pour manipuler vos dépôts ?</p>
+                    <ul class="options-list">
+                        <li class="option-item" onclick="verifierReponse(this, false)">admin</li>
+                        <li class="option-item" onclick="verifierReponse(this, false)">user</li>
+                        <li class="option-item" onclick="verifierReponse(this, true)">repo</li>
+                    </ul>
+                </div>
+
+                <div class="question">
+                    <p>3. Quel terminal Windows est officiellement recommandé et installé par défaut avec Git ?</p>
+                    <ul class="options-list">
+                        <li class="option-item" onclick="verifierReponse(this, false)">L'invite de commandes CMD</li>
+                        <li class="option-item" onclick="verifierReponse(this, true)">Git Bash</li>
+                        <li class="option-item" onclick="verifierReponse(this, false)">PowerShell</li>
+                    </ul>
+                </div>
+
+                <div class="question">
+                    <p>4. Quel fichier de clé devez-vous copier et ajouter sur votre profil GitHub pour l'accès SSH ?</p>
+                    <ul class="options-list">
+                        <li class="option-item" onclick="verifierReponse(this, true)">La clé publique (id_rsa.pub)</li>
+                        <li class="option-item" onclick="verifierReponse(this, false)">La clé privée (id_rsa)</li>
+                        <li class="option-item" onclick="verifierReponse(this, false)">Le fichier de configuration globale</li>
+                    </ul>
+                </div>
+
+                <div class="score-box" id="score-display">Votre Score : 0 / 4</div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function copierCode(id) {
+            var texte = document.getElementById(id).innerText;
+            navigator.clipboard.writeText(texte).then(() => {
+                alert("Copié dans le presse-papiers : " + texte);
+            });
+        }
+
+        function switchTab(onglet) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            if(onglet === 'lecon') {
+                document.querySelector('.tabs button:nth-child(1)').classList.add('active');
+                document.getElementById('tab-lecon').classList.add('active');
+            } else {
+                document.querySelector('.tabs button:nth-child(2)').classList.add('active');
+                document.getElementById('tab-pratique').classList.add('active');
+            }
+        }
+
+        let score = 0;
+        let totalQuestions = 4;
+        
+        function verifierReponse(element, estCorrect) {
+            const parentUl = element.parentElement;
+            if(parentUl.classList.contains('deja-repondu')) return;
+            
+            parentUl.classList.add('deja-repondu');
+
+            if(estCorrect) {
+                element.classList.add('correct');
+                score++;
+            } else {
+                element.classList.add('incorrect');
+                Array.from(parentUl.children).forEach(li => {
+                    if(li.getAttribute('onclick').includes('true')) {
+                        li.classList.add('correct');
+                    }
+                });
+            }
+            
+            document.getElementById('score-display').innerText = `Votre Score : ${score} / ${totalQuestions}`;
+        }
+    </script>
+</body>
+</html>

@@ -1,37 +1,12 @@
-# Node / package manager
-node_modules/
-.npm/
+# Secrets - ne jamais commiter
+Backend/.env
+*.env
 
-# Build outputs
-/dist/
-/.vite/
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
 
-# Environment and secrets
-.env
-.env.*
-!.env.example
-
-# OS generated files
+# OS
 .DS_Store
-Thumbs.db
-
-# Editor files
-.vscode/
-.idea/
-*.swp
-*.swo
-
-# Logs
-logs/
-*.log
-npm-debug.log*
-
-# Test coverage
-coverage/
-
-# Temporary files
-.tmp/
-.temp/
-
-# User uploads
-uploads/

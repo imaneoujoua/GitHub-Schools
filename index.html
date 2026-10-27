@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitMastery - Apprendre Git & GitHub</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* -------------------------------------
+           RESET & REGLAGES GENERAUX
+        ------------------------------------- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f4f7f6;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .container {
+            width: 85%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* -------------------------------------
+           1. EN-TÊTE / HEADER (LOGO & NAV)
+        ------------------------------------- */
+        header {
+            background: #ffffff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #24292e;
+        }
+
+        .logo i {
+            margin-right: 10px;
+            color: #2f80ed;
+            font-size: 28px;
+        }
+
+        .logo span {
+            color: #2f80ed;
+        }
+
+        .user-profile {
+            background: #2f80ed;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 14px;
+            transition: background 0.3s;
+        }
+
+        .user-profile:hover {
+            background: #1b66ca;
+        }
+
+        /* -------------------------------------
+           2. SECTION STATISTIQUES
+        ------------------------------------- */
+        .stats-section {
+            background: linear-gradient(135deg, #24292e 0%, #1a1e22 100%);
+            color: white;
+            padding: 40px 0;
+            text-align: center;
+        }
+
+        .stats-title {
+            margin-bottom: 25px;
+            font-size: 20px;
+            font-weight: 400;
+            letter-spacing: 1px;
+            color: #a3b3c2;
+        }
+
+        .stats-grid {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .stat-box {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .stat-number {
+            font-size: 36px;
+            font-weight: bold;
+            color: #2f80ed;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #cbd5e1;
+        }
+
+        /* -------------------------------------
+           3. GRILLE DE CARTES (6 BLOCS)
+        ------------------------------------- */
+        main {
+            flex: 1;
+            padding: 50px 0;
+        }
+
+        .main-title {
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 28px;
+            color: #24292e;
+        }
+
+        .grid-categories {
+            display: grid;
+            /* Changement ici : s'adapte parfaitement pour 6 cartes */
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+            gap: 30px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+            border: 1px solid #e2e8f0;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(47, 128, 237, 0.15);
+            border-color: #2f80ed;
+        }
+
+        /* Style spécifique pour la carte Académique lors du survol */
+        .card.academic-card:hover {
+            box-shadow: 0 15px 30px rgba(168, 85, 247, 0.2);
+            border-color: #a855f7;
+        }
+
+        .card-icon {
+            width: 70px;
+            height: 70px;
+            margin: 0 auto 20px auto;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+        }
+
+        .card h3 {
+            font-size: 20px;
+            margin-bottom: 12px;
+            color: #24292e;
+        }
+
+        .card p {
+            font-size: 14px;
+            color: #64748b;
+            line-height: 1.5;
+        }
+
+        /* Couleurs des icônes */
+        .icon-installation { background-color: #e8f0fe; color: #1a73e8; }
+        .icon-debutant { background-color: #e6f4ea; color: #137333; }
+        .icon-intermediaire { background-color: #fef7e0; color: #b06000; }
+        .icon-avance { background-color: #fce8e6; color: #c5221f; }
+        .icon-exercices { background-color: #e0f7fa; color: #00838f; }
+        .icon-academic { background-color: #f3e8ff; color: #7c3aed; } /* Violet pour l'académique */
+
+        /* -------------------------------------
+           4. PIED DE PAGE / FOOTER
+        ------------------------------------- */
+        footer {
+            background-color: #1e293b;
+            color: #f8fafc;
+            padding: 60px 0 20px 0;
+            font-size: 14px;
+            margin-top: 50px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-col h4 {
+            color: #ffffff;
+            font-size: 16px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .footer-col h4::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -6px;
+            width: 35px;
+            height: 2px;
+            background-color: #2f80ed;
+        }
+
+        .footer-col ul { list-style: none; }
+        .footer-col ul li { margin-bottom: 12px; }
+        .footer-col ul li a { color: #94a3b8; transition: color 0.2s; }
+        .footer-col ul li a:hover { color: #ffffff; padding-left: 5px; }
+
+        .social-links a {
+            display: inline-block;
+            width: 35px;
+            height: 35px;
+            background-color: #334155;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 35px;
+            margin-right: 10px;
+            color: #cbd5e1;
+            transition: all 0.3s;
+        }
+
+        .social-links a:hover {
+            background-color: #2f80ed;
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 25px;
+            border-top: 1px solid #334155;
+            color: #64748b;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container">
+            <div class="logo">
+                <i class="fa-brands fa-github"></i> Git<span>hub</span>_Schools
+            </div>
+            <a href="mon-espace.html" class="user-profile" id="nav-username">
+                <i class="fa-regular fa-user"></i> Mon Espace
+            </a>
+        </div>
+    </header>
+
+    <section class="stats-section">
+        <div class="container">
+            <div class="stats-title">PLATEFORME UTILISÉE À TRAVERS LE MONDE</div>
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <div class="stat-number">12,450+</div>
+                    <div class="stat-label">Utilisateurs Actifs</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number">85k+</div>
+                    <div class="stat-label">Commandes Copiées</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number" id="global-success-rate">98%</div>
+                    <div class="stat-label" id="global-success-label">Taux de Réussite aux Exercices</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <main class="container">
+        <h2 class="main-title">Choisissez votre univers d'apprentissage</h2>
+        
+        <!-- GRILLE DE CARTES PRINCIPALE (MAINTENANT 6 BLOCS) -->
+        <div class="grid-categories">
+            
+            <!-- 1. Installation -->
+            <div class="card" onclick="window.location.href='installation.html'">
+                <div class="card-icon icon-installation">
+                    <i class="fa-solid fa-download"></i>
+                </div>
+                <h3>Installation & Configuration</h3>
+                <p>Apprenez à installer Git sous Windows, Mac ou Linux, et configurez vos clés SSH de manière sécurisée.</p>
+            </div>
+
+            <!-- 2. Débutant -->
+            <div class="card" onclick="window.location.href='debutant.html'">
+                <div class="card-icon icon-debutant">
+                    <i class="fa-solid fa-seedling"></i>
+                </div>
+                <h3>Commandes Débutant</h3>
+                <p>Le workflow quotidien indispensable : initialiser, vérifier l'état, ajouter à l'index et enregistrer (commit).</p>
+            </div>
+
+            <!-- 3. Intermédiaire -->
+            <div class="card" onclick="window.location.href='intermediaire.html'">
+                <div class="card-icon icon-intermediaire">
+                    <i class="fa-solid fa-code-branch"></i>
+                </div>
+                <h3>Commandes Intermédiaire</h3>
+                <p>Maîtrisez la gestion des branches locales, la fusion (merge) et la synchronisation avec GitHub (push/pull).</p>
+            </div>
+
+            <!-- 4. Avancé -->
+            <div class="card" onclick="window.location.href='avance.html'">
+                <div class="card-icon icon-avance">
+                    <i class="fa-solid fa-fire"></i>
+                </div>
+                <h3>Commandes Avancées</h3>
+                <p>Devenez un pro : résolution des conflits complexes, utilisation du Rebase, des Tags et réécriture d'historique.</p>
+            </div>
+
+            <!-- 5. Exercices -->
+            <div class="card" onclick="window.location.href='exercices.html'">
+                <div class="card-icon icon-exercices">
+                    <i class="fa-solid fa-laptop-code"></i>
+                </div>
+                <h3>Espace Exercices & Lab</h3>
+                <p>Mettez en pratique vos connaissances avec des quiz interactifs et des défis de simulation de terminal.</p>
+            </div>
+
+            <!-- 6. LA NOUVELLE CARTE : ESPACE ACADÉMIQUE -->
+            <div class="card academic-card" onclick="window.location.href='academique.html'">
+                <div class="card-icon icon-academic">
+                    <i class="fa-solid fa-book-open"></i>
+                </div>
+                <h3>Espace Académique</h3>
+                <p>Explorez les concepts théoriques fondamentaux, les architectures de versions, et découvrez des cas pratiques.</p>
+            </div>
+
+        </div>
+    </main>
+
+    <footer>
+        <div class="container footer-grid">
+            <div class="footer-col">
+                <h4>À propos</h4>
+                <ul>
+                    <li><a href="#">Notre Mission</a></li>
+                    <li><a href="#">Documentation Officielle</a></li>
+                    <li><a href="#">Conditions d'utilisation</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-col">
+                <h4>Ressources mondiales</h4>
+                <ul>
+                    <li><a href="https://git-scm.com" target="_blank">Git SCM Official</a></li>
+                    <li><a href="https://github.com" target="_blank">GitHub Platform</a></li>
+                    <li><a href="#">Communauté Francophone</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-col">
+                <h4>Contact & Support</h4>
+                <ul>
+                    <li><a href="mailto:support@gitmasterschool.com"><i class="fa-regular fa-envelope"></i> support@gitschool.com</a></li>
+                    <li><a href="#"><i class="fa-solid fa-headset"></i> Centre d'aide international</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-col">
+                <h4>Suivez-nous</h4>
+                <div class="social-links">
+                    <a href="#"><i class="fa-brands fa-linkedin-in"></i></a>
+                    <a href="#"><i class="fa-brands fa-github"></i></a>
+                    <a href="#"><i class="fa-brands fa-twitter"></i></a>
+                    <a href="#"><i class="fa-brands fa-youtube"></i></a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2026 GitHub_Schools Platform. Conçu pour les étudiants du monde entier.</p>
+        </div>
+    </footer>
+
+    <script>
+        window.onload = function() {
+            // SÉCURITÉ : Vérification de la session de l'étudiant
+            const nomEtudiant = localStorage.getItem('git_student_name');
+            if (!nomEtudiant) {
+                window.location.href = 'connexion.html';
+                return; 
+            }
+            
+            // PERSONNALISATION DE L'EN-TÊTE
+            document.getElementById('nav-username').innerHTML = `<i class="fa-regular fa-user"></i> ${nomEtudiant}`;
+            
+            // AFFICHAGE DES SCORES DEPUIS LE REEL LOCALSTORAGE
+            const missionsReussies = JSON.parse(localStorage.getItem('git_labs_completed')) || [];
+            if(missionsReussies.length > 0) {
+                document.getElementById('global-success-rate').innerText = `${missionsReussies.length} / 7`;
+                document.getElementById('global-success-label').innerText = "Vos missions de Lab réussies";
+            }
+        };
+    </script>
+</body>
+</html>

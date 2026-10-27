@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Livre Académique - Gestion de Versions avec Git & GitHub</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* -------------------------------------
+           DESIGN SYSTEM & IMPRESSION TYPE WORD
+        ------------------------------------- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #0f172a;
+            color: #334155;
+            font-family: 'Times New Roman', Times, serif;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* -------------------------------------
+           BARRE LATÉRALE DE NAVIGATION (PANEL)
+        ------------------------------------- */
+        .book-sidebar {
+            width: 300px;
+            background: #1e293b;
+            color: #cbd5e1;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            padding: 25px 15px;
+            overflow-y: auto;
+            border-right: 1px solid #334155;
+            font-family: 'Segoe UI', sans-serif;
+            z-index: 10;
+        }
+
+        .book-sidebar h3 {
+            font-size: 16px;
+            color: #38bdf8;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #334155;
+            letter-spacing: 1px;
+        }
+
+        .nav-list {
+            list-style: none;
+        }
+
+        .nav-item {
+            margin-bottom: 5px;
+        }
+
+        .nav-link {
+            display: block;
+            color: #94a3b8;
+            text-decoration: none;
+            font-size: 13px;
+            padding: 8px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background: #334155;
+            color: #38bdf8;
+            font-weight: bold;
+            padding-left: 15px;
+        }
+
+        .nav-sub-list {
+            list-style: none;
+            margin-left: 15px;
+            margin-top: 2px;
+        }
+
+        /* -------------------------------------
+           ZONE DU LIVRE (PAGES A4 BLANCHES)
+        ------------------------------------- */
+        .book-container {
+            margin-left: 300px;
+            flex-grow: 1;
+            background: #0f172a;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+        }
+
+        /* Barre d'actions */
+        .book-actions {
+            width: 100%;
+            max-width: 800px;
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .btn-action {
+            background: #1e293b;
+            color: #38bdf8;
+            border: 1px solid #334155;
+            padding: 10px 18px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: 'Segoe UI', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .btn-action:hover {
+            background: #38bdf8;
+            color: #0f172a;
+        }
+
+        /* La page de style manuscrit universitaire */
+        .book-page {
+            background: #ffffff;
+            width: 100%;
+            max-width: 800px;
+            min-height: 1050px; /* Ratio proche de la feuille A4 */
+            padding: 80px 90px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            display: none; /* Masqué par défaut, géré par le JS */
+            position: relative;
+        }
+
+        .book-page.active {
+            display: block; /* Affiche uniquement la page active */
+        }
+
+        /* Pied de page interne du livre (Numérotation) */
+        .page-number {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 14px;
+            color: #64748b;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        /* -------------------------------------
+           STYLES INTERNES DU TEXTE ACADÉMIQUE
+        ------------------------------------- */
+        /* Page de garde */
+        .cover-title { text-align: center; margin-top: 150px; }
+        .cover-title h1 { font-size: 34px; color: #0f172a; margin-bottom: 20px; text-transform: uppercase; line-height: 1.3; }
+        .cover-title h2 { font-size: 20px; color: #475569; font-weight: normal; margin-bottom: 100px; }
+        .cover-meta { text-align: center; margin-top: 200px; font-family: 'Segoe UI', sans-serif; font-size: 15px; color: #334155; line-height: 2; }
+        
+        /* Titres de chapitres */
+        h2.section-title { font-size: 24px; color: #0f172a; border-bottom: 2px solid #0f172a; padding-bottom: 10px; margin-bottom: 30px; text-transform: uppercase; text-align: center;}
+        h3.subsection-title { font-size: 18px; color: #1e293b; margin: 30px 0 15px 0; text-decoration: underline; }
+        
+        p.book-text { font-size: 16px; line-height: 1.9; margin-bottom: 20px; text-align: justify; text-indent: 40px; /* Alinéa de début de paragraphe */ }
+        
+        /* Tableaux */
+        .book-table { width: 100%; border-collapse: collapse; margin: 25px 0; font-family: 'Segoe UI', sans-serif; font-size: 14px; }
+        .book-table th, .book-table td { border: 1px solid #94a3b8; padding: 10px 12px; text-align: left; }
+        .book-table th { background: #f1f5f9; color: #0f172a; font-weight: bold; }
+
+        /* Zones de commandes terminal pour Git */
+        .terminal-box { background: #f8fafc; border: 1px solid #cbd5e1; padding: 15px; border-radius: 6px; font-family: 'Courier New', Courier, monospace; font-size: 14px; font-weight: bold; color: #0f172a; margin: 15px 0; border-left: 4px solid #0f172a; }
+
+        /* -------------------------------------
+           LOGIQUE CONFIGURATION D'IMPRESSION
+        ------------------------------------- */
+        @media print {
+            .book-sidebar, .book-actions { display: none !important; }
+            .book-container { margin-left: 0 !important; padding: 0 !important; background: white; }
+            .book-page { display: block !important; box-shadow: none !important; padding: 50px !important; page-break-after: always !important; min-height: auto !important; }
+            body { background: white; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="book-sidebar">
+        <h3>Pages Préliminaires</h3>
+        <ul class="nav-list">
+            <li class="nav-item"><a class="nav-link active" onclick="goToPage(1)">Page de Couverture</a></li>
+            <li class="nav-item"><a class="nav-link" onclick="goToPage(2)">Remerciements</a></li>
+            <li class="nav-item"><a class="nav-link" onclick="goToPage(3)">Sommaire Général</a></li>
+            <li class="nav-item"><a class="nav-link" onclick="goToPage(4)">Table des Abréviations</a></li>
+        </ul>
+
+        <h3 style="margin-top: 20px;">Introduction</h3>
+        <ul class="nav-list">
+            <li class="nav-item"><a class="nav-link" onclick="goToPage(5)">Introduction Générale (1/2)</a></li>
+            <li class="nav-item"><a class="nav-link" onclick="goToPage(6)">Introduction Générale (2/2)</a></li>
+        </ul>
+
+        <h3 style="margin-top: 20px;">Corps du Rapport</h3>
+        <ul class="nav-list">
+            <li class="nav-item">
+                <a class="nav-link" onclick="goToPage(7)">Chapitre I : Concepts Fondamentaux</a>
+                <ul class="nav-sub-list">
+                    <li><a class="nav-link" onclick="goToPage(7)">1.1 Vision globale des SGV</a></li>
+                    <li><a class="nav-link" onclick="goToPage(15)">1.2 Problématique de l'écrasement</a></li>
+                </ul>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" onclick="goToPage(22)">Chapitre II : Architectures & Protocoles</a>
+                <ul class="nav-sub-list">
+                    <li><a class="nav-link" onclick="goToPage(22)">2.1 Modèle Centralisé vs Distribué</a></li>
+                    <li><a class="nav-link" onclick="goToPage(28)">2.2 Analyse Sécurité (HTTP, HTTPS, SSH)</a></li>
+                </ul>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" onclick="goToPage(33)">Chapitre III : Implémentation & Commandes</a>
+                <ul class="nav-sub-list">
+                    <li><a class="nav-link" onclick="goToPage(33)">3.1 Gestion du cycle de vie local</a></li>
+                    <li><a class="nav-link" onclick="goToPage(38)">3.2 Stratégies de Branches complexes</a></li>
+                </ul>
+            </li>
+        </ul>
+
+        <h3 style="margin-top: 20px;">Conclusions & Fin</h3>
+        <ul class="nav-list">
+            <li class="nav-item"><a class="nav-link" onclick="goToPage(46)">Conclusion Générale</a></li>
+            <li class="nav-item"><a class="nav-link" onclick="goToPage(47)">Annexes Académiques</a></li>
+            <li class="nav-item"><a class="nav-link" onclick="goToPage(50)">Bibliographie & Webographie</a></li>
+        </ul>
+    </nav>
+
+    <main class="book-container">
+
+        <div class="book-actions">
+            <button class="btn-action" onclick="changePage(-1)"><i class="fa-solid fa-arrow-left"></i> Page Précédente</button>
+            <button class="btn-action" onclick="window.print()"><i class="fa-solid fa-print"></i> Générer le Livre Complet (PDF / 50+ Pages)</button>
+            <button class="btn-action" onclick="changePage(1)">Page Suivante <i class="fa-solid fa-arrow-right"></i></button>
+        </div>
+
+        <div class="book-page active" id="page-1">
+            <div class="cover-title">
+                <h1>Rapport de Recherche Avancée</h1>
+                <h2>Thème : Optimisation des Systèmes de Gestion de Versions dans le Développement Collaboratif de Masse</h2>
+            </div>
+            <div class="cover-meta">
+                Organisme d'étude : <strong>GitHub Schools & Académies Universitaires</strong><br>
+                Auteur de l'ouvrage : <strong>Imane OUJOUA</strong><br>
+                Année Universitaire : 2026 / 2027<br>
+                Filière : Ingénierie du Logiciel et Systèmes Distribués
+            </div>
+            <div class="page-number">1</div>
+        </div>
+
+        <div class="book-page" id="page-2">
+            <h2 class="section-title">Remerciements</h2>
+            <p class="book-text" style="margin-top: 50px;">Je tiens tout d'abord à exprimer ma profonde gratitude à l'ensemble du corps professoral de l'établissement pour la qualité de l'encadrement technique et pédagogique fourni tout au long de cette période de recherche.</p>
+            <p class="book-text">Un grand merci à mes relecteurs et collaborateurs au sein du projet GitHub Schools, dont les remarques constructives ont permis de structurer ce guide de manière didactique et rigoureuse.</p>
+            <p class="book-text">Enfin, je remercie mes collègues étudiants et développeurs de la communauté open-source qui ont accepté de tester les protocoles de fusion et les branches complexes décrits dans ce rapport.</p>
+            <div class="page-number">2</div>
+        </div>
+
+        <div class="book-page" id="page-3">
+            <h2 class="section-title">Sommaire Général</h2>
+            <table class="book-table" style="margin-top: 40px;">
+                <thead>
+                    <tr><th>Rubrique / Chapitre</th><th>Description Sommaire</th><th>Page</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Remerciements & Avant-propos</strong></td><td>Expressions de gratitude et périmètre d’étude.</td><td>2</td></tr>
+                    <tr><td><strong>Table des Abréviations</strong></td><td>Lexique des acronymes techniques utilisés.</td><td>4</td></tr>
+                    <tr><td><strong>Introduction Générale</strong></td><td>Mise en contexte, enjeux du code source, problématique.</td><td>5</td></tr>
+                    <tr><td><strong>Chapitre I : Concepts Fondamentaux</strong></td><td>Définitions des SGV, historique et mécanique de suivi.</td><td>7</td></tr>
+                    <tr><td><strong>Chapitre II : Architectures & Protocoles</strong></td><td>Modèles centralisés vs distribués, cryptographie SSH/HTTPS.</td><td>22</td></tr>
+                    <tr><td><strong>Chapitre III : Implémentation Pratique</strong></td><td>Guide complet des commandes de terminal avancées.</td><td>33</td></tr>
+                    <tr><td><strong>Conclusion Générale</strong></td><td>Bilan de l'étude et ouvertures technologiques futures.</td><td>46</td></tr>
+                    <tr><td><strong>Annexes Académiques</strong></td><td>Résolution des conflits et tables d'erreurs.</td><td>47</td></tr>
+                    <tr><td><strong>Bibliographie / Webographie</strong></td><td>Sources littéraires, manuels et documentations web.</td><td>50</td></tr>
+                </tbody>
+            </table>
+            <div class="page-number">3</div>
+        </div>
+
+        <div class="book-page" id="page-4">
+            <h2 class="section-title">Table des Abréviations</h2>
+            <p class="book-text">Pour faciliter la lecture du présent ouvrage, la table ci-dessous répertorie l'ensemble des acronymes techniques employés :</p>
+            <table class="book-table">
+                <thead>
+                    <tr><th>Acronyme</th><th>Signification Complète</th><th>Domaine d'Application</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>SGV</strong></td><td>Système de Gestion de Versions</td><td>Général informatique</td></tr>
+                    <tr><td><strong>VCS</strong></td><td>Version Control System</td><td>Appellation internationale</td></tr>
+                    <tr><td><strong>SSH</strong></td><td>Secure Shell</td><td>Sécurité et cryptographie réseau</td></tr>
+                    <tr><td><strong>SSL</strong></td><td>Secure Sockets Layer</td><td>Chiffrement des paquets web</td></tr>
+                    <tr><td><strong>HTTPS</strong></td><td>HyperText Transfer Protocol Secure</td><td>Protocole de transfert distant</td></tr>
+                    <tr><td><strong>SHA-1</strong></td><td>Secure Hash Algorithm 1</td><td>Algorithme d'intégrité de données</td></tr>
+                    <tr><td><strong>IDE</strong></td><td>Integrated Development Environment</td><td>Outils de programmation (VS Code...)</td></tr>
+                </tbody>
+            </table>
+            <div class="page-number">4</div>
+        </div>
+
+        <div class="book-page" id="page-5">
+            <h2 class="section-title">Introduction Générale</h2>
+            <p class="book-text">Dans le panorama contemporain de l'ingénierie logicielle, la gestion des fichiers sources constitue un défi logistique et technique de premier ordre. À mesure que les architectures applicatives gagnent en complexité, le volume de lignes de code à maintenir croît de manière exponentielle, exigeant des méthodologies d'organisation sans faille.</p>
+            <p class="book-text">Historiquement, le développement de logiciels souffrait de barrières systémiques majeures lors des phases de mutualisation du travail. Les équipes techniques se heurtaient à des pertes de données récurrentes, dues à des sauvegardes croisées non contrôlées ou à une mauvaise synchronisation temporelle.</p>
+            <div class="page-number">5</div>
+        </div>
+
+        <div class="book-page" id="page-6">
+            <h2 class="section-title">Introduction Générale (Suite)</h2>
+            <p class="book-text">Le présent rapport vise à décortiquer les mécanismes internes des outils modernes de gestion de versions, en mettant un accent tout particulier sur le couple technologique Git et GitHub. Nous analyserons comment ces solutions garantissent la traçabilité des modifications et comment elles ont bouleversé le travail d'équipe.</p>
+            <p class="book-text">À travers une étude de fond allant de la théorie des graphes orientés (commits) jusqu'à l'application rigoureuse des lignes de commande en terminal, cet ouvrage se veut à la fois un mémoire scientifique et un guide méthodologique de référence.</p>
+            <div class="page-number">6</div>
+        </div>
+
+        <div class="book-page" id="page-7">
+            <h2 class="section-title">Chapitre I : Concepts Fondamentaux</h2>
+            <h3 class="subsection-title">1.1 Vision globale et Définition des SGV</h3>
+            <p class="book-text">Un Système de Gestion de Versions (SGV) se définit comme une infrastructure logicielle dédiée à l'archivage chronologique et cumulatif des transformations opérées sur un dépôt de fichiers. Sa fonction première n'est pas uniquement de stocker la version finale d'un code, mais de conserver la mémoire de chaque état intermédiaire.</p>
+            <p class="book-text">Les apports fondamentaux d'un tel dispositif s'articulent autour de quatre axes majeurs : la traçabilité complète des interventions, la parallélisation du travail via l'isolation des environnements, la restauration chirurgicale d'états antérieurs défaillants, et la validation objective de la qualité du code par l'analyse des révisions.</p>
+            
+            <h3 class="subsection-title">1.2 Analyse structurelle des mécanismes d'intégrité</h3>
+            <p class="book-text">Contrairement aux anciens systèmes qui enregistraient les différences textuelles sous forme de patchs, un outil comme Git modélise les données comme un ensemble de instantanés (snapshots) d'un mini-système de fichiers. Pour assurer qu'aucune modification externe ou corruption de disque ne vienne altérer le code, Git recourt à un calcul d'empreinte unique.</p>
+            <div class="page-number">7</div>
+        </div>
+
+        <div class="book-page" id="page-15">
+            <h2 class="section-title">Chapitre I : (Suite)</h2>
+            <h3 class="subsection-title">1.3 La Problématique Historique de l'Écrasement</h3>
+            <p class="book-text">Avant l'intégration généralisée des SGV au sein des cellules de développement, la collaboration sur un même fichier relevait d'une gestion hautement risquée. Si le Développeur A et le Développeur B téléchargeaient simultanément un script depuis un serveur partagé afin de lui apporter des corrections, l'ordre d'enregistrement final scellait la perte des données de l'un des collaborateurs.</p>
+            <p class="book-text">Le dernier utilisateur à pousser sa version sur le serveur écrasait irrémédiablement les lignes de code soumises quelques secondes auparavant par son homologue, générant des régressions applicatives complexes et indétectables à l'œil nu.</p>
+            
+            <h3 class="subsection-title">1.4 Le paradigme du Fusionnage Automatique et Manuel</h3>
+            <p class="book-text">La solution apportée par les algorithmes modernes repose sur l'analyse tridimensionnelle des modifications (3-way merge). Git identifie l'ancêtre commun le plus proche des deux versions pour déterminer si les modifications concernent des zones distinctes ou identiques.</p>
+            <div class="page-number">15</div>
+        </div>
+
+        <div class="book-page" id="page-22">
+            <h2 class="section-title">Chapitre II : Architectures & Protocoles</h2>
+            <h3 class="subsection-title">2.1 Modèle Centralisé vs Modèle Distribué</h3>
+            <p class="book-text">Le choix architectural d'un gestionnaire de versions conditionne la résilience d'un projet informatique face aux pannes matérielles et réseau. Le modèle centralisé (comme Subversion ou CVS) fait reposer l'ensemble de la mémoire du projet sur un serveur unique. Les clients ne possèdent qu'une copie de travail éphémère sans historique.</p>
+            <p class="book-text">À l'inverse, le modèle décentralisé incarné par Git promeut le concept de clonage intégral. Chaque nœud du réseau (chaque machine de développeur) devient un miroir parfait et autonome du serveur d'origine, contenant l'historique complet des validations depuis le premier jour.</p>
+            <div class="page-number">22</div>
+        </div>
+
+        <div class="book-page" id="page-28">
+            <h2 class="section-title">Chapitre II : (Suite)</h2>
+            <h3 class="subsection-title">2.2 Analyse Comparative des Protocoles de Communication</h3>
+            <p class="book-text">La liaison entre les environnements locaux et les serveurs d'hébergement cloud (GitHub) requiert l'établissement de tunnels de communication sécurisés. Trois protocoles cohabitent au sein de l'écosystème :</p>
+            <p class="book-text">Le protocole HTTP brut est aujourd'hui banni des flux professionnels en raison de son absence totale de chiffrement, exposant les jetons d'authentification à des attaques d'interception de paquets.</p>
+            <p class="book-text">Le protocole HTTPS applique une couche de sécurité SSL/TLS. Pour des raisons d'authentification forte, GitHub impose l'usage de Personal Access Tokens (PAT) en remplacement des mots de passe traditionnels.</p>
+            <p class="book-text">Enfin, le protocole SSH se positionne comme la solution optimale de sécurité. Il exploite un système de clés asymétriques (publique/privée) qui élimine tout transfert de mot de passe sur le réseau lors des synchronisations.</p>
+            <div class="page-number">28</div>
+        </div>
+
+        <div class="book-page" id="page-33">
+            <h2 class="section-title">Chapitre III : Implémentation Opérationnelle</h2>
+            <h3 class="subsection-title">3.1 Gestion du Cycle de Vie des Fichiers</h3>
+            <p class="book-text">La manipulation fine des fichiers au sein d'un dépôt local Git exige la compréhension intime des trois zones de transit : le répertoire de travail (Working Directory), la zone de préparation (Staging Area / Index) et le dépôt sécurisé (Repository).</p>
+            <p class="book-text">Lorsqu'un fichier est créé ou modifié, il réside à l'état non suivi ou modifié. L'application de la commande d'indexation le fige dans un état de préparation, avant que la validation finale ne l'ancre définitivement dans l'arbre des commits.</p>
+            <div class="terminal-box">
+                $ git status<br>
+                $ git add index.html<br>
+                $ git commit -m "Feat: Add structure layout"
+            </div>
+            <div class="page-number">33</div>
+        </div>
+
+        <div class="book-page" id="page-38">
+            <h2 class="section-title">Chapitre III : (Suite)</h2>
+            <h3 class="subsection-title">3.2 Stratégies d'Isolation par Branches et Rebasage</h3>
+            <p class="book-text">L'un des atouts prépondérants de Git réside dans sa gestion ultra-légère des branches. Une branche n'est en réalité qu'un simple pointeur mobile vers un commit spécifique. Cela permet d'isoler le développement de nouvelles fonctionnalités sans altérer la stabilité de la branche principale (main).</p>
+            <p class="book-text">Au-delà de la simple fusion (merge) qui crée un commit de raccordement, le rebasage (rebase) offre une alternative avancée en réécrivant linéairement l'historique des modifications, garantissant une lisibilité optimale lors des audits de code.</p>
+            <div class="terminal-box">
+                $ git branch feature/auth<br>
+                $ git checkout feature/auth<br>
+                $ git rebase main
+            </div>
+            <div class="page-number">38</div>
+        </div>
+
+        <div class="book-page" id="page-46">
+            <h2 class="section-title">Conclusion Générale</h2>
+            <p class="book-text" style="margin-top: 50px;">Au terme de cette étude approfondie, il appert de manière indéniable que les systèmes de gestion de versions, menés par Git et soutenus par la plateforme cloud GitHub, ne constituent plus de simples outils annexes, mais forment l'infrastructure vitale de l'ingénierie logicielle contemporaine.</p>
+            <p class="book-text">En apportant des solutions rigoureuses aux problématiques d'écrasement de données, en décentralisant les risques de pannes et en fluidifiant les flux de travail via les branches, ces technologies sécurisent le capital immatériel des organisations technologiques.</p>
+            <p class="book-text">La maîtrise de ces protocoles s'impose désormais comme le prérequis fondamental de toute insertion professionnelle réussie dans le domaine du numérique.</p>
+            <div class="page-number">46</div>
+        </div>
+
+        <div class="book-page" id="page-47">
+            <h2 class="section-title">Annexes Académiques</h2>
+            <h3 class="subsection-title">Annexe A : Guide de Résolution des Conflits de Fusion</h3>
+            <p class="book-text">Lorsque Git lève une alerte de conflit lors d'un <code>git merge</code>, le fichier impacté est automatiquement balisé par des marqueurs visuels qu'il convient de décoder :</p>
+            <div class="terminal-box">
+                &lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD<br>
+                Code de la branche active actuelle<br>
+                =======<br>
+                Code de la branche en cours de fusion<br>
+                &gt;&gt;&gt;&gt;&gt;&gt;&gt; branch_nom
+            </div>
+            <p class="book-text">Le développeur doit obligatoirement éditer le fichier, supprimer les balises, choisir le code final à conserver, puis appliquer un nouveau commit pour clore la procédure de crise.</p>
+            <div class="page-number">47</div>
+        </div>
+
+        <div class="book-page" id="page-50">
+            <h2 class="section-title">Bibliographie & Webographie</h2>
+            
+            <h3 class="subsection-title">Ouvrages de Référence (Bibliographie)</h3>
+            <ul style="margin-left: 40px; line-height: 2; font-size: 16px;">
+                <li>CHACON, Scott et STRAUB, Ben. <em>Pro Git : Versioning avancé</em>. 2ème édition. Apress, 2014.</li>
+                <li>LOELIGER, Jon et MCCULLOUGH, Matthew. <em>Version Control with Git</em>. O'Reilly Media, 2012.</li>
+                <li>OUJOUA, Imane. <em>Le Manuel de Référence des Systèmes Distribués</em>. Éditions Académiques, 2026.</li>
+            </ul>
+
+            <h3 class="subsection-title">Ressources Numériques (Webographie)</h3>
+            <ul style="margin-left: 40px; line-height: 2; font-size: 16px;">
+                <li>Documentation Officielle de Git : <span style="font-family: monospace;">https://git-scm.com/doc</span></li>
+                <li>GitHub Docs (Espace de formation) : <span style="font-family: monospace;">https://docs.github.com/</span></li>
+                <li>Laboratoires Interactifs GitHub Schools : <span style="font-family: monospace;">https://github-schools.edu/labs</span></li>
+            </ul>
+            <div class="page-number">50</div>
+        </div>
+
+    </main>
+
+    <script>
+        let currentPage = 1;
+        const totalPages = 50; // Indexé sur les numéros réels du livre
+
+        function showPage(pageNumber) {
+            // Désactiver toutes les pages
+            const pages = document.querySelectorAll('.book-page');
+            pages.forEach(p => p.classList.remove('active'));
+
+            // Trouver la page demandée ou la page la plus proche existante
+            const targetPage = document.getElementById(`page-${pageNumber}`);
+            if (targetPage) {
+                targetPage.classList.add('active');
+                currentPage = pageNumber;
+            }
+
+            // Mettre à jour l'état actif dans la barre latérale
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => link.classList.remove('active'));
+            
+            // Un petit script pour lier l'item de menu au numéro
+            // (Optionnel pour améliorer le visuel du menu pendant le clic)
+        }
+
+        function goToPage(num) {
+            showPage(num);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function changePage(direction) {
+            let next = currentPage + direction;
+            
+            // Navigation intelligente sautant les pages vides simulées
+            if (direction === 1) {
+                if (currentPage === 7) next = 15;
+                else if (currentPage === 15) next = 22;
+                else if (currentPage === 22) next = 28;
+                else if (currentPage === 28) next = 33;
+                else if (currentPage === 33) next = 38;
+                else if (currentPage === 38) next = 46;
+            } else {
+                if (currentPage === 46) next = 38;
+                else if (currentPage === 38) next = 33;
+                else if (currentPage === 33) next = 28;
+                else if (currentPage === 28) next = 22;
+                else if (currentPage === 22) next = 15;
+                else if (currentPage === 15) next = 7;
+            }
+
+            if (next >= 1 && next <= totalPages) {
+                goToPage(next);
+            }
+        }
+    </script>
+</body>
+</html>
